@@ -77,10 +77,10 @@ func TestGermanLocalePreservesTemplatePlaceholders(t *testing.T) {
 func TestTranslateReturnsGerman(t *testing.T) {
 	require.NoError(t, Init())
 
-	assert.Equal(t, "Ungültige Parameter", Translate(LangDe, MsgInvalidParams))
+	assert.Equal(t, "Ungültiges Token", Translate(LangDe, MsgTokenInvalid))
 	assert.Equal(t,
-		"Zu viele Einträge in der Stapelanfrage, das Maximum ist 100",
-		Translate(LangDe, MsgBatchTooMany, map[string]any{"Max": 100}))
+		"Sie haben das Anfragelimit erreicht: höchstens 100 Anfragen in 5 Minuten",
+		Translate(LangDe, MsgRateLimitReached, map[string]any{"Max": 100, "Minutes": 5}))
 }
 
 func TestNormalizeLangResolvesGermanTags(t *testing.T) {

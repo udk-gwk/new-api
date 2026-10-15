@@ -5,7 +5,10 @@ COPY web/package.json web/bun.lock ./
 RUN bun install --frozen-lockfile
 COPY ./web ./
 COPY ./VERSION /build/VERSION
-RUN DISABLE_ESLINT_PLUGIN='true' VITE_REACT_APP_VERSION=$(cat /build/VERSION) bun run build
+# UdK GenKI Lab build: lock every visitor to the udk preset (web/src/lib/theme-lock.ts).
+# Pass --build-arg PUBLIC_THEME_LOCK= for the stock theme controls.
+ARG PUBLIC_THEME_LOCK=udk
+RUN DISABLE_ESLINT_PLUGIN='true' PUBLIC_THEME_LOCK=$PUBLIC_THEME_LOCK VITE_REACT_APP_VERSION=$(cat /build/VERSION) bun run build
 
 FROM golang:1.26.1-alpine@sha256:2389ebfa5b7f43eeafbd6be0c3700cc46690ef842ad962f6c5bd6be49ed82039 AS builder2
 ENV GO111MODULE=on CGO_ENABLED=0 GOWORK=off

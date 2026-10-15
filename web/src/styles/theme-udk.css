@@ -117,11 +117,20 @@
     [data-slot='status-badge'],
     [data-slot='label'],
     [data-slot='form-label']
-  ):not(:has(div + div, p, span + div, div + span)) {
+  ):not(:has(.flex-col, p, div + div, span + div, div + span)) {
   text-transform: uppercase;
   letter-spacing: 1.5px;
   font-weight: 600;
   font-size: 0.75rem;
+}
+
+/* Card-like buttons (dashboard "Recommended actions", setup steps: an icon
+ * plus a title/description column) must wrap and shrink with their grid
+ * column; the stock button is nowrap and sizes to its content. */
+[data-theme-preset='udk'] [data-slot='button']:has(.flex-col, p, div + div) {
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
 }
 
 /* Buttons: 1px black border, hover inverts. Ghost and icon buttons (stock:

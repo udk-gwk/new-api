@@ -27,6 +27,8 @@ import '@/lib/dayjs'
 import { initializeFrontendCache } from '@/lib/frontend-cache'
 import { createAppQueryClient } from '@/lib/query-client'
 import { readCachedStatus, statusQueryOptions } from '@/lib/status-query'
+import { LOCKED_PRESET } from '@/lib/theme-lock'
+import { loadUdkChat } from '@/lib/udk-chat'
 
 import { DirectionProvider } from './context/direction-provider'
 import { FontProvider } from './context/font-provider'
@@ -100,6 +102,9 @@ if (!rootElement) {
     /* empty */
   }
 })()
+// UdK GenKI Lab builds carry the lab's chat on every page.
+if (LOCKED_PRESET === 'udk') loadUdkChat()
+
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(

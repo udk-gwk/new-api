@@ -19,7 +19,10 @@ For commercial licensing, please contact support@quantumnous.com
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Home } from '@/features/home'
+import { UdkLanding } from '@/features/udk-landing'
+import { LOCKED_PRESET } from '@/lib/theme-lock'
 
 export const Route = createFileRoute('/')({
-  component: Home,
+  // Builds locked to the udk preset show the GenKI Lab landing instead.
+  component: LOCKED_PRESET === 'udk' ? UdkLanding : Home,
 })

@@ -1,0 +1,520 @@
+/* Landing page in the udk.digital style (design/udk-digital-style.md in the
+ * udk-gwk infrastructure repo). Every rule is scoped under .udk-landing.
+ * Sora is declared in styles/theme-udk.css. Tint: api = #fffbe0. */
+
+.udk-landing {
+  --udk-bg: #ffffff;
+  --udk-line: #000000;
+  --udk-text: #000000;
+  --udk-text-body: #444444;
+  --udk-text-light: #666666;
+  --udk-hover-bg: #fafafa;
+  --udk-tint: #fffbe0;
+  --udk-focus: #0066cc;
+  --udk-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background: var(--udk-bg);
+  color: var(--udk-text);
+  font-family: 'Sora', ui-sans-serif, system-ui, sans-serif;
+}
+
+.udk-landing * {
+  box-sizing: border-box;
+}
+
+/* Every line is a 1px gap showing the black container behind white tiles. */
+.udk-landing .udk-grid {
+  flex: 1;
+  display: flex;
+  background: var(--udk-line);
+  border: 1px solid var(--udk-line);
+  gap: 1px;
+}
+
+@keyframes udk-web-shiver {
+  0% {
+    transform: scale(1) skew(0deg);
+  }
+  10% {
+    transform: scale(0.998) skew(0.1deg, 0.05deg);
+  }
+  30% {
+    transform: scale(1.001) skew(-0.08deg, -0.04deg);
+  }
+  55% {
+    transform: scale(0.9995) skew(0.04deg, 0.02deg);
+  }
+  80% {
+    transform: scale(1.0002) skew(-0.01deg, 0deg);
+  }
+  100% {
+    transform: scale(1) skew(0deg);
+  }
+}
+.udk-landing .udk-shiver {
+  animation: udk-web-shiver 1.5s ease forwards;
+}
+
+.udk-landing .udk-tile {
+  background: var(--udk-bg);
+  padding: clamp(24px, 4vw, 56px);
+  min-width: 0;
+}
+
+/* --- sidebar --- */
+.udk-landing .udk-sidebar {
+  flex: 0 0 clamp(280px, 28%, 460px);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.udk-landing .udk-sidebar-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+.udk-landing .udk-sidebar-main {
+  margin: auto 0;
+}
+.udk-landing .udk-sidebar-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.udk-landing h1 {
+  font-size: clamp(1.6rem, 1rem + 2.4vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  max-width: 22ch;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  margin: 0 0 20px;
+}
+.udk-landing p {
+  font-size: clamp(0.95rem, 0.9rem + 0.25vw, 1.1rem);
+  color: var(--udk-text-body);
+  line-height: 1.6;
+  max-width: 62ch;
+  margin: 0;
+}
+
+.udk-landing .udk-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--udk-text-light);
+  margin: 0;
+}
+.udk-landing .udk-label-dark {
+  color: var(--udk-text);
+}
+.udk-landing .udk-brand {
+  text-decoration: none;
+}
+.udk-landing .udk-brand:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.udk-landing .udk-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  margin: 32px 0 0;
+}
+.udk-landing .udk-stats dt {
+  font-size: clamp(1.8rem, 1.3rem + 1.2vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.udk-landing .udk-stats dd {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--udk-text-light);
+  margin: 6px 0 0;
+}
+
+.udk-landing .udk-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+.udk-landing .udk-signed-in {
+  margin-top: 12px;
+  font-size: 0.85rem;
+}
+.udk-landing .udk-signed-in strong {
+  color: var(--udk-text);
+  font-weight: 600;
+}
+.udk-landing .udk-note {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--udk-text-light);
+  border-left: 2px solid var(--udk-text-light);
+  padding-left: 10px;
+  max-width: 46ch;
+  margin-top: 28px;
+}
+
+.udk-landing .udk-lang {
+  display: flex;
+  gap: 2px;
+}
+.udk-landing .udk-lang button {
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  background: none;
+  border: none;
+  color: var(--udk-text-light);
+  cursor: pointer;
+  padding: 6px;
+  min-width: 32px;
+  min-height: 32px;
+}
+.udk-landing .udk-lang button[aria-pressed='true'] {
+  color: var(--udk-text);
+}
+
+.udk-landing a {
+  color: var(--udk-text);
+}
+.udk-landing .udk-foot-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+}
+.udk-landing .udk-foot-links a {
+  font-size: 0.75rem;
+  color: var(--udk-text-light);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+.udk-landing .udk-foot-links a:hover {
+  color: var(--udk-text);
+}
+
+/* --- work column --- */
+.udk-landing .udk-work {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--udk-line);
+  min-width: 0;
+}
+.udk-landing .udk-step {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.udk-landing .udk-grow {
+  flex: 1;
+}
+.udk-landing .udk-tinted {
+  background: var(--udk-tint);
+}
+.udk-landing .udk-step-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+.udk-landing .udk-step-num {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--udk-text-light);
+}
+
+/* step 01 */
+.udk-landing .udk-howto {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 1px;
+  background: var(--udk-line);
+  border: 1px solid var(--udk-line);
+}
+.udk-landing .udk-howto li {
+  background: var(--udk-bg);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.udk-landing .udk-howto strong {
+  font-weight: 600;
+}
+.udk-landing .udk-howto span {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--udk-text-body);
+}
+
+/* step 02 */
+.udk-landing .udk-places {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 24px;
+}
+.udk-landing .udk-place {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.udk-landing .udk-place-head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--udk-line);
+}
+.udk-landing .udk-place-head span:last-child {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--udk-text-light);
+}
+.udk-landing .udk-models {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.udk-landing .udk-model {
+  font: inherit;
+  text-align: left;
+  color: var(--udk-text);
+  background: var(--udk-bg);
+  border: 1px solid var(--udk-line);
+  padding: 12px 14px;
+  min-height: 44px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+}
+.udk-landing .udk-model:hover {
+  background: var(--udk-hover-bg);
+  transform: translateY(-2px);
+}
+.udk-landing .udk-model[aria-pressed='true'] {
+  background: var(--udk-tint);
+}
+.udk-landing .udk-model-id {
+  font-family: var(--udk-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.udk-landing .udk-model-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--udk-text-light);
+}
+.udk-landing .udk-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding: 1px 6px;
+  border: 1px solid var(--udk-text-light);
+  color: var(--udk-text-light);
+}
+.udk-landing .udk-access {
+  font-size: 0.75rem;
+  color: var(--udk-text-light);
+}
+
+/* step 03 */
+.udk-landing .udk-code-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.udk-landing .udk-seg {
+  display: flex;
+  flex-wrap: wrap;
+}
+.udk-landing .udk-seg button {
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  background: var(--udk-bg);
+  color: var(--udk-text);
+  border: 1px solid var(--udk-line);
+  margin-left: -1px;
+  padding: 11px 16px;
+  min-height: 44px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+.udk-landing .udk-seg button:first-child {
+  margin-left: 0;
+}
+.udk-landing .udk-seg button:hover {
+  background: var(--udk-hover-bg);
+}
+.udk-landing .udk-seg button[aria-pressed='true'] {
+  background: var(--udk-text);
+  color: var(--udk-bg);
+}
+.udk-landing pre {
+  font-family: var(--udk-mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  background: var(--udk-bg);
+  border: 1px solid var(--udk-line);
+  padding: 16px 18px;
+  margin: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  white-space: pre;
+}
+.udk-landing .udk-base {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  font-size: 0.75rem;
+  color: var(--udk-text-light);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.udk-landing .udk-base code {
+  font-family: var(--udk-mono);
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--udk-text);
+}
+
+/* buttons */
+.udk-landing .udk-btn {
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  background: var(--udk-bg);
+  color: var(--udk-text);
+  border: 1px solid var(--udk-line);
+  padding: 12px 20px;
+  min-height: 44px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+.udk-landing .udk-btn:hover {
+  background: var(--udk-text);
+  color: var(--udk-bg);
+}
+.udk-landing .udk-btn-primary {
+  background: var(--udk-text);
+  color: var(--udk-bg);
+}
+.udk-landing .udk-btn-primary:hover {
+  background: var(--udk-bg);
+  color: var(--udk-text);
+}
+.udk-landing .udk-btn svg {
+  width: 16px;
+  height: 16px;
+}
+.udk-landing .udk-btn-text {
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  background: none;
+  border: none;
+  color: var(--udk-text);
+  cursor: pointer;
+  padding: 10px 4px;
+  min-height: 44px;
+}
+.udk-landing .udk-btn-text:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.udk-landing .udk-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.udk-landing :is(button, a, pre):focus-visible {
+  outline: 2px solid var(--udk-focus);
+  outline-offset: -2px;
+}
+
+@media (max-width: 860px) {
+  .udk-landing {
+    padding: 16px;
+  }
+  .udk-landing .udk-grid {
+    flex-direction: column;
+  }
+  .udk-landing .udk-sidebar {
+    flex: 0 0 auto;
+  }
+  .udk-landing .udk-sidebar-main {
+    margin: 0;
+  }
+  .udk-landing .udk-grow {
+    flex: 0 0 auto;
+  }
+}
+
+/* UdK is a public body: BITV 2.0 / EU 2016/2102. All motion here is decorative. */
+@media (prefers-reduced-motion: reduce) {
+  .udk-landing *,
+  .udk-landing .udk-shiver {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}

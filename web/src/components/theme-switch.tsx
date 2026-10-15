@@ -28,9 +28,15 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useTheme } from '@/context/theme-provider'
+import { isThemeLocked } from '@/lib/theme-lock'
 import { cn } from '@/lib/utils'
 
+// Hidden when the build locks the theme (lib/theme-lock.ts).
 export function ThemeSwitch() {
+  return isThemeLocked ? null : <ThemeSwitchControl />
+}
+
+function ThemeSwitchControl() {
   const { t } = useTranslation()
   const { theme, setTheme } = useTheme()
 

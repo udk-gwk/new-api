@@ -21,3 +21,9 @@ For commercial licensing, please contact support@quantumnous.com
 declare module '@visactor/react-vchart' {
   export const VChart: React.ComponentType<Record<string, unknown>>
 }
+
+/**
+ * Theme preset the build locks every visitor to (`PUBLIC_THEME_LOCK`, e.g.
+ * `udk`), or an empty string for the stock behaviour. Set by rsbuild.config.ts.
+ */
+declare const __THEME_LOCK__: string

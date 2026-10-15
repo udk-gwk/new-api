@@ -1,0 +1,213 @@
+/*
+ * UdK GenKI Lab preset (`data-theme-preset="udk"`), the udk.digital page style:
+ * Swiss grid drawn with black hairlines, Sora, uppercase micro-labels, no
+ * rounded corners, no shadows, one pale tint (api: #fffbe0) and a blue focus
+ * ring. Light only. Source of the style: udk-gwk infrastructure repo,
+ * design/udk-digital-style.md.
+ *
+ * Kept in its own file so rebasing onto upstream touches theme-presets.css
+ * only where the preset must opt out of the shared surface bridge.
+ */
+
+@font-face {
+  font-family: 'Sora';
+  font-weight: 300 400;
+  font-display: swap;
+  src: url('../assets/fonts/sora-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Sora';
+  font-weight: 500 600;
+  font-display: swap;
+  src: url('../assets/fonts/sora-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Sora';
+  font-weight: 700 800;
+  font-display: swap;
+  src: url('../assets/fonts/sora-800.woff2') format('woff2');
+}
+
+[data-theme-preset='udk'],
+.dark [data-theme-preset='udk'] {
+  color-scheme: light;
+  --udk-tint: #fffbe0;
+  --udk-focus: #0066cc;
+
+  --radius: 0rem;
+  --font-ui-sans: 'Sora', ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-ui-sans);
+
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #000000;
+  --primary: #000000;
+  --primary-foreground: #ffffff;
+  --secondary: #ffffff;
+  --secondary-foreground: #000000;
+  --muted: #fafafa;
+  --muted-foreground: #666666;
+  --accent: #fafafa;
+  --accent-foreground: #000000;
+  --destructive: #c4001a;
+  --destructive-foreground: #ffffff;
+  --success: #00703c;
+  --success-foreground: #ffffff;
+  --warning: #8a5a00;
+  --warning-foreground: #ffffff;
+  --info: #0066cc;
+  --info-foreground: #ffffff;
+  --neutral: #666666;
+  --neutral-foreground: #ffffff;
+  --border: #000000;
+  --input: #000000;
+  --ring: var(--udk-focus);
+
+  --chart-1: #000000;
+  --chart-2: #666666;
+  --chart-3: #999999;
+  --chart-4: #c8c8c8;
+  --chart-5: #0066cc;
+  --overview-accent-1: #000000;
+  --overview-accent-2: #666666;
+  --overview-accent-3: #999999;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #000000;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--udk-tint);
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: #000000;
+  --sidebar-ring: var(--udk-focus);
+
+  --table-header: #ffffff;
+  --table-header-hover: #fafafa;
+  --table-row: #ffffff;
+  --skeleton-base: #f1f5f9;
+  --skeleton-highlight: #fafafa;
+
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* No shadows anywhere; corners come from --radius (0). Avatars and the switch
+ * keep their round shape, which carries meaning there. */
+[data-theme-preset='udk'] *,
+[data-theme-preset='udk'] *::before,
+[data-theme-preset='udk'] *::after {
+  box-shadow: none !important;
+}
+[data-theme-preset='udk']
+  [class*='rounded']:not([data-slot^='avatar']):not([data-slot^='switch']) {
+  border-radius: 0 !important;
+}
+
+/* Labels: uppercase, wide tracking. Card-like buttons (a title plus a
+ * description inside) keep normal case so long text does not overflow. */
+[data-theme-preset='udk']
+  :is(
+    [data-slot='button'],
+    [data-slot='tabs-trigger'],
+    [data-slot='table-head'],
+    [data-slot='badge'],
+    [data-slot='status-badge'],
+    [data-slot='label'],
+    [data-slot='form-label']
+  ):not(:has(div + div, p, span + div, div + span)) {
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+/* Buttons: 1px black border, hover inverts. Ghost and icon buttons (stock:
+ * border-transparent, no fill class) stay borderless and hover grey. */
+[data-theme-preset='udk'] [data-slot='button'] {
+  border: 1px solid var(--foreground);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+[data-theme-preset='udk'] [data-slot='button']:hover:not(:disabled) {
+  background: var(--foreground);
+  color: var(--background);
+}
+[data-theme-preset='udk']
+  [data-slot='button'][class*='bg-primary']:hover:not(:disabled) {
+  background: var(--background);
+  color: var(--foreground);
+}
+[data-theme-preset='udk']
+  [data-slot='button'][class*='border-transparent']:not(
+    [class*='bg-primary']
+  ):not([class*='bg-destructive']):not([class*='bg-secondary']),
+[data-theme-preset='udk'] [data-slot='sidebar-menu-button'] {
+  border-color: transparent;
+}
+[data-theme-preset='udk']
+  [data-slot='button'][class*='border-transparent']:not(
+    [class*='bg-primary']
+  ):not([class*='bg-destructive']):not([class*='bg-secondary']):hover:not(
+    :disabled
+  ) {
+  background: var(--muted);
+  color: var(--foreground);
+}
+
+/* Inputs and frames: hairlines. */
+[data-theme-preset='udk']
+  :is(
+    [data-slot='input'],
+    [data-slot='textarea'],
+    [data-slot='select-trigger'],
+    [data-slot='input-group']
+  ) {
+  border: 1px solid var(--foreground);
+  background: var(--background);
+}
+[data-theme-preset='udk']
+  :is(
+    [data-slot='card'],
+    [data-slot='table-container'],
+    [data-slot='dialog-content'],
+    [data-slot='sheet-content'],
+    [data-slot='popover-content'],
+    [data-slot='dropdown-menu-content'],
+    [data-slot='select-content']
+  ) {
+  border: 1px solid var(--foreground);
+}
+
+/* Headlines: Sora 800, tight. */
+[data-theme-preset='udk']
+  :is(h1, h2, [data-slot='card-title'], [data-slot='dialog-title']) {
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+[data-theme-preset='udk'] h1 {
+  letter-spacing: -1px;
+}
+
+/* Active sidebar entry carries the tint. */
+[data-theme-preset='udk']
+  [data-slot='sidebar-menu-button'][data-active='true'] {
+  background: var(--udk-tint);
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+/* Focus ring (BITV 2.0): always visible. */
+[data-theme-preset='udk'] :focus-visible {
+  outline: 2px solid var(--udk-focus) !important;
+  outline-offset: -2px;
+}
+
+/* The lab's Chatwoot bubble: square like every udk.digital page. */
+[data-theme-preset='udk'] :is(.woot-widget-bubble, .woot-widget-holder) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}

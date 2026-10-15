@@ -16,6 +16,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
+import { LOCKED_PRESET } from './theme-lock'
+
 export const THEME_STORAGE_KEYS = {
   mode: 'newapi:theme:v1:mode',
   preset: 'newapi:theme:v1:preset',
@@ -25,11 +27,27 @@ export const THEME_STORAGE_KEYS = {
   contentLayout: 'newapi:theme:v1:content-layout',
 } as const
 
+// With a build-time theme lock (lib/theme-lock.ts) these values win over
+// anything stored, and writes are dropped.
+const LOCKED_PREFERENCES: Readonly<Record<string, string>> =
+  LOCKED_PRESET === null
+    ? {}
+    : {
+        [THEME_STORAGE_KEYS.mode]: 'light',
+        [THEME_STORAGE_KEYS.preset]: LOCKED_PRESET,
+        [THEME_STORAGE_KEYS.font]: 'default',
+        [THEME_STORAGE_KEYS.radius]: 'default',
+        [THEME_STORAGE_KEYS.scale]: 'default',
+        [THEME_STORAGE_KEYS.contentLayout]: 'full',
+      }
+
 export function readThemePreference<T extends string>(
   key: string,
   allowed: ReadonlySet<T>,
   fallback: T
 ): T {
+  const locked = LOCKED_PREFERENCES[key]
+  if (locked !== undefined && allowed.has(locked as T)) return locked as T
   if (typeof window === 'undefined') return fallback
 
   try {
@@ -43,6 +61,7 @@ export function readThemePreference<T extends string>(
 }
 
 export function writeThemePreference(key: string, value: string | null): void {
+  if (LOCKED_PRESET !== null) return
   if (typeof window === 'undefined') return
 
   try {

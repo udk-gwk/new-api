@@ -22,9 +22,15 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { useTheme } from '@/context/theme-provider'
+import { isThemeLocked } from '@/lib/theme-lock'
 import { cn } from '@/lib/utils'
 
+// Hidden when the build locks the theme (lib/theme-lock.ts).
 export function ThemeQuickSwitcher() {
+  return isThemeLocked ? null : <ThemeQuickSwitcherControl />
+}
+
+function ThemeQuickSwitcherControl() {
   const { t } = useTranslation()
   const { theme, setTheme } = useTheme()
 

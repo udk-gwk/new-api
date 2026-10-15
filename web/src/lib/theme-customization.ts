@@ -38,6 +38,13 @@ export const THEME_PRESETS = [
     swatches: ['oklch(0.984 0.005 95)', 'oklch(0.685 0.142 38)'],
   },
   {
+    // UdK GenKI Lab (udk.digital): black hairlines on white, Sora, square
+    // corners, one pale yellow tint. Styles live in styles/theme-udk.css.
+    value: 'udk',
+    name: 'UdK GenKI Lab',
+    swatches: ['oklch(1 0 0)', 'oklch(0 0 0)'],
+  },
+  {
     value: 'simple-large',
     name: 'Simple Large-font',
     swatches: ['oklch(0.15 0 0)', 'oklch(0.99 0 0)'],
@@ -161,6 +168,7 @@ export const PRESET_DEFAULT_FONT: Partial<
   Record<ThemePreset, ResolvedThemeFont>
 > = {
   anthropic: 'serif',
+  udk: 'system',
 }
 
 /**

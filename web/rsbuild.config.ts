@@ -56,6 +56,13 @@ export default defineConfig(({ envMode }) => {
       entry: {
         index: './src/main.tsx',
       },
+      define: {
+        // Locks the theme for every visitor (preset + light mode) and hides the
+        // theme controls. Empty = stock behaviour. See src/lib/theme-lock.ts.
+        __THEME_LOCK__: JSON.stringify(
+          (process.env.PUBLIC_THEME_LOCK ?? '').trim()
+        ),
+      },
     },
     resolve: {
       alias: {

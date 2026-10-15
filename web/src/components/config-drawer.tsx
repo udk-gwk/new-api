@@ -61,13 +61,19 @@ import {
   type ThemeRadius,
   type ThemeScale,
 } from '@/lib/theme-customization'
+import { isThemeLocked } from '@/lib/theme-lock'
 import { cn } from '@/lib/utils'
 
 import { useSidebar } from './ui/sidebar'
 
 const Item = RadioPrimitive.Root
 
+// Hidden when the build locks the theme (lib/theme-lock.ts).
 export function ConfigDrawer() {
+  return isThemeLocked ? null : <ConfigDrawerControl />
+}
+
+function ConfigDrawerControl() {
   const { t } = useTranslation()
   const { setOpen } = useSidebar()
   const { resetDir } = useDirection()

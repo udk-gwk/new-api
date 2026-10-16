@@ -31,6 +31,7 @@ import { useTranslation } from 'react-i18next'
 
 import { ThemeModeSwitch } from '@/components/theme-mode-switch'
 import { getPricing } from '@/features/pricing/api'
+import { openUdkChat } from '@/lib/udk-chat'
 import { useAuthStore } from '@/stores/auth-store'
 
 import { PLACES, resolveModels } from './catalog'
@@ -220,8 +221,14 @@ export function UdkLanding() {
               <a href='https://onboard.udk.digital/doc/apiudkdigital-UffkkddWGn'>
                 {t.docs}
               </a>
-              <Link to='/pricing'>{t.prices}</Link>
-              <a href='https://onboard.udk.digital'>{t.help}</a>
+              <a
+                href='https://onboard.udk.digital'
+                onClick={(e) => {
+                  if (openUdkChat()) e.preventDefault()
+                }}
+              >
+                {t.help}
+              </a>
             </div>
           </div>
         </aside>

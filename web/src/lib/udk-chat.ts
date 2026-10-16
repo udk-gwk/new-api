@@ -29,6 +29,7 @@ const BASE_URL = 'https://chat.udk.digital'
 const WEBSITE_TOKEN = 'PZVaDZC6WmZ8VNvvDnkriCCV'
 
 type Chatwoot = {
+  toggle: (state?: 'open' | 'close') => void
   setLocale: (locale: string) => void
   setConversationCustomAttributes: (attrs: Record<string, string>) => void
 }
@@ -45,6 +46,16 @@ declare global {
 
 const localeOf = (lang: string | undefined) =>
   lang?.toLowerCase().startsWith('de') ? 'de' : 'en'
+
+/**
+ * Opens the chat window. Returns false while the widget is not loaded (or
+ * blocked), so a "Hilfe" link can fall back to its href.
+ */
+export function openUdkChat(): boolean {
+  if (typeof window === 'undefined' || !window.$chatwoot) return false
+  window.$chatwoot.toggle('open')
+  return true
+}
 
 export function loadUdkChat(): void {
   if (typeof document === 'undefined' || window.chatwootSDK) return

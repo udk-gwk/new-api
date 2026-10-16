@@ -32,7 +32,6 @@ type Text = {
   signedInAs: string
   dataNote: string
   docs: string
-  prices: string
   help: string
   stepKey: string
   stepModels: string
@@ -70,7 +69,6 @@ export const TEXT: Record<Lang, Text> = {
     dataNote:
       'Mit Sovereign-Modellen bleiben deine Daten auf Servern der UdK. EU-Modelle laufen in Rechenzentren in der EU; solange sie experimentell sind, gib dort keine personenbezogenen Daten ein.',
     docs: 'Anleitung',
-    prices: 'Preise',
     help: 'Hilfe',
     stepKey: 'Schlüssel',
     stepModels: 'Modell',
@@ -120,7 +118,6 @@ export const TEXT: Record<Lang, Text> = {
     dataNote:
       'With sovereign models your data stays on UdK servers. EU models run in data centres in the EU; while they are experimental, do not enter personal data there.',
     docs: 'Guide',
-    prices: 'Prices',
     help: 'Help',
     stepKey: 'Key',
     stepModels: 'Model',

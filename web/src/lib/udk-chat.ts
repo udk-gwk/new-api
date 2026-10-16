@@ -47,14 +47,28 @@ declare global {
 const localeOf = (lang: string | undefined) =>
   lang?.toLowerCase().startsWith('de') ? 'de' : 'en'
 
+const HELP_URL = 'https://onboard.udk.digital'
+
 /**
- * Opens the chat window. Returns false while the widget is not loaded (or
- * blocked), so a "Hilfe" link can fall back to its href.
+ * Opens the chat window for a "Hilfe" link. If the widget is still loading,
+ * it opens as soon as it is ready; if it never comes (blocked, offline), the
+ * help pages open after 4 s instead.
  */
-export function openUdkChat(): boolean {
-  if (typeof window === 'undefined' || !window.$chatwoot) return false
-  window.$chatwoot.toggle('open')
-  return true
+export function openUdkChat(): void {
+  if (typeof window === 'undefined') return
+  if (window.$chatwoot) {
+    window.$chatwoot.toggle('open')
+    return
+  }
+  const fallback = window.setTimeout(() => {
+    window.removeEventListener('chatwoot:ready', onReady)
+    window.location.href = HELP_URL
+  }, 4000)
+  function onReady() {
+    window.clearTimeout(fallback)
+    window.$chatwoot?.toggle('open')
+  }
+  window.addEventListener('chatwoot:ready', onReady, { once: true })
 }
 
 export function loadUdkChat(): void {

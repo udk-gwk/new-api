@@ -25,7 +25,6 @@ type Text = {
   title: string
   statModels: string
   statPlaces: string
-  compat: string
   signIn: string
   console: string
   signedInAs: string
@@ -59,7 +58,6 @@ export const TEXT: Record<Lang, Text> = {
     title: 'KI-Modelle per API',
     statModels: 'Modelle',
     statPlaces: 'Orte',
-    compat: 'OpenAI-kompatibel',
     signIn: 'Mit UdK-Login anmelden',
     console: 'Zur Konsole',
     signedInAs: 'Angemeldet als',
@@ -106,7 +104,6 @@ export const TEXT: Record<Lang, Text> = {
     title: 'AI models by API',
     statModels: 'models',
     statPlaces: 'locations',
-    compat: 'OpenAI-compatible',
     signIn: 'Sign in with UdK login',
     console: 'Open the console',
     signedInAs: 'Signed in as',

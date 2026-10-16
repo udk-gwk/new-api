@@ -213,7 +213,6 @@ export function UdkLanding() {
           </div>
 
           <div className='udk-sidebar-foot'>
-            <span className='udk-label'>api.udk.digital · {t.compat}</span>
             <div className='udk-foot-links'>
               <a href='https://onboard.udk.digital/doc/apiudkdigital-UffkkddWGn'>
                 {t.docs}
@@ -221,7 +220,8 @@ export function UdkLanding() {
               <a
                 href='https://onboard.udk.digital'
                 onClick={(e) => {
-                  if (openUdkChat()) e.preventDefault()
+                  e.preventDefault()
+                  openUdkChat()
                 }}
               >
                 {t.help}

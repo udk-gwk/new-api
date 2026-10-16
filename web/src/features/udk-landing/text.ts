@@ -87,7 +87,7 @@ export const TEXT: Record<Lang, Text> = {
     places: {
       sovereign: {
         name: 'Sovereign',
-        desc: 'UdK-Hardware. Daten verlassen das Haus nicht.',
+        desc: 'UdK-Hardware, ohne externen Anbieter.',
       },
       eu: {
         name: 'EU',
@@ -137,7 +137,7 @@ export const TEXT: Record<Lang, Text> = {
     places: {
       sovereign: {
         name: 'Sovereign',
-        desc: 'UdK hardware. Data never leaves the house.',
+        desc: 'UdK hardware, with no outside provider.',
       },
       eu: {
         name: 'EU',

@@ -26,7 +26,7 @@ import { Link } from '@tanstack/react-router'
  * Texts live here (DE/EN) rather than in the locale files, so upstream's
  * i18n parity checks stay untouched.
  */
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ThemeModeSwitch } from '@/components/theme-mode-switch'
@@ -34,6 +34,7 @@ import { getPricing } from '@/features/pricing/api'
 import { useAuthStore } from '@/stores/auth-store'
 
 import { PLACES, resolveModels } from './catalog'
+import { mountHero, PALETTES } from './genki-hero'
 import { TEXT, type Lang } from './text'
 
 import './udk-landing.css'
@@ -114,6 +115,14 @@ export function UdkLanding() {
     document.title = t.pageTitle
   }, [t.pageTitle])
 
+  // Pixel-sort hero behind the sidebar, in shades of the api yellow.
+  const heroRef = useRef<HTMLCanvasElement>(null)
+  useEffect(() => {
+    if (!heroRef.current) return
+    const hero = mountHero(heroRef.current, { colors: PALETTES.api })
+    return () => hero.destroy()
+  }, [])
+
   const code = snippet(tab, model, t.prompt)
 
   const pick = (id: string) => {
@@ -138,6 +147,7 @@ export function UdkLanding() {
     <div className='udk-landing'>
       <div className='udk-grid udk-shiver'>
         <aside className='udk-tile udk-sidebar'>
+          <canvas className='udk-sidebar-bg' ref={heroRef} aria-hidden='true' />
           <div className='udk-sidebar-top'>
             <a
               className='udk-label udk-label-dark udk-brand'

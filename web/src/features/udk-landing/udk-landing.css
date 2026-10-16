@@ -71,8 +71,9 @@
     transform: scale(1) skew(0deg);
   }
 }
+/* The keyframes already are the damped wave; any easing would bounce every segment. */
 .udk-landing .udk-shiver {
-  animation: udk-web-shiver 1.5s ease forwards;
+  animation: udk-web-shiver 1.5s linear;
 }
 
 .udk-landing .udk-tile {
@@ -101,6 +102,40 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+/* GenKI pixel-sort hero behind the sidebar in api yellow (genki-hero.ts, synced from
+   udk/infrastructure design/genki-hero). Text sits on --udk-bg boxes to stay readable. */
+.udk-landing .udk-sidebar {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.udk-landing .udk-sidebar-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.5;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+.udk-landing .udk-sidebar-top > .udk-brand,
+.udk-landing .udk-sidebar-main > *,
+.udk-landing .udk-sidebar-foot > * {
+  background: var(--udk-bg);
+  width: fit-content;
+  max-width: 100%;
+  padding: 6px 10px;
+  margin-left: -10px;
+}
+.udk-landing .udk-sidebar-top > .udk-switches {
+  background: var(--udk-bg);
+  padding: 0 8px;
+}
+.udk-landing .udk-sidebar-main > .udk-stats {
+  padding: 10px;
 }
 
 .udk-landing h1 {

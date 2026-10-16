@@ -134,9 +134,6 @@
   background: var(--udk-bg);
   padding: 0 8px;
 }
-.udk-landing .udk-sidebar-main > .udk-stats {
-  padding: 10px;
-}
 
 .udk-landing h1 {
   font-size: clamp(1.6rem, 1rem + 2.4vw, 3.5rem);
@@ -177,26 +174,6 @@
   text-underline-offset: 4px;
 }
 
-.udk-landing .udk-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 32px;
-  margin: 32px 0 0;
-}
-.udk-landing .udk-stats dt {
-  font-size: clamp(1.8rem, 1.3rem + 1.2vw, 2.5rem);
-  font-weight: 800;
-  letter-spacing: -1px;
-  line-height: 1;
-}
-.udk-landing .udk-stats dd {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--udk-text-light);
-  margin: 6px 0 0;
-}
 
 .udk-landing .udk-cta {
   display: flex;

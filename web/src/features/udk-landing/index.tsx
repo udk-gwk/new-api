@@ -180,17 +180,6 @@ export function UdkLanding() {
           <div className='udk-sidebar-main'>
             <h1>{t.title}</h1>
 
-            <dl className='udk-stats'>
-              <div>
-                <dt>{models.length}</dt>
-                <dd>{t.statModels}</dd>
-              </div>
-              <div>
-                <dt>{places.length}</dt>
-                <dd>{t.statPlaces}</dd>
-              </div>
-            </dl>
-
             <div className='udk-cta'>
               {user ? (
                 <Link className='udk-btn udk-btn-primary' to='/dashboard'>

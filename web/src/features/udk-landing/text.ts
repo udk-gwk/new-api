@@ -23,8 +23,6 @@ export type Lang = 'de' | 'en'
 type Text = {
   pageTitle: string
   title: string
-  statModels: string
-  statPlaces: string
   signIn: string
   console: string
   signedInAs: string
@@ -56,8 +54,6 @@ export const TEXT: Record<Lang, Text> = {
   de: {
     pageTitle: 'KI-Modelle per API — GenKI Lab',
     title: 'KI-Modelle per API',
-    statModels: 'Modelle',
-    statPlaces: 'Orte',
     signIn: 'Mit UdK-Login anmelden',
     console: 'Zur Konsole',
     signedInAs: 'Angemeldet als',
@@ -102,8 +98,6 @@ export const TEXT: Record<Lang, Text> = {
   en: {
     pageTitle: 'AI models by API — GenKI Lab',
     title: 'AI models by API',
-    statModels: 'models',
-    statPlaces: 'locations',
     signIn: 'Sign in with UdK login',
     console: 'Open the console',
     signedInAs: 'Signed in as',

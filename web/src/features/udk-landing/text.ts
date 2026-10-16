@@ -23,13 +23,13 @@ export type Lang = 'de' | 'en'
 type Text = {
   pageTitle: string
   title: string
-  purpose: string
   statModels: string
   statPlaces: string
   compat: string
   signIn: string
   console: string
   signedInAs: string
+  modelsIntro: string
   dataNote: string
   docs: string
   help: string
@@ -44,7 +44,6 @@ type Text = {
   how3d: string
   places: Record<Place, { name: string; desc: string }>
   experimental: string
-  access: string
   codeLang: string
   copy: string
   copied: string
@@ -58,16 +57,16 @@ export const TEXT: Record<Lang, Text> = {
   de: {
     pageTitle: 'KI-Modelle per API — GenKI Lab',
     title: 'KI-Modelle per API',
-    purpose:
-      'Ein Schlüssel für die Sprachmodelle des GenKI Lab: für eigene Programme, Werkzeuge wie Cursor oder Obsidian und Kunstprojekte. Du entscheidest pro Anfrage, wo deine Daten verarbeitet werden.',
     statModels: 'Modelle',
     statPlaces: 'Orte',
     compat: 'OpenAI-kompatibel',
     signIn: 'Mit UdK-Login anmelden',
     console: 'Zur Konsole',
     signedInAs: 'Angemeldet als',
+    modelsIntro:
+      'Der Modellname in jeder Anfrage legt fest, wo sie verarbeitet wird: Sovereign-Modelle laufen auf Servern der UdK, EU-Modelle in Rechenzentren in der EU. Ein Schlüssel reicht für alle Modelle, die dein Konto nutzen darf.',
     dataNote:
-      'Mit Sovereign-Modellen bleiben deine Daten auf Servern der UdK. EU-Modelle laufen in Rechenzentren in der EU; solange sie experimentell sind, gib dort keine personenbezogenen Daten ein.',
+      'Neue Konten nutzen Sovereign; EU schaltet das Lab auf Anfrage frei. EU-Modelle sind experimentell: Schick ihnen keine personenbezogenen Daten.',
     docs: 'Anleitung',
     help: 'Hilfe',
     stepKey: 'Schlüssel',
@@ -94,8 +93,6 @@ export const TEXT: Record<Lang, Text> = {
       us: { name: 'US', desc: 'US-Anbieter. Keine personenbezogenen Daten.' },
     },
     experimental: 'Experimentell',
-    access:
-      'Neue Konten nutzen Sovereign. EU schaltet das Lab auf Anfrage frei.',
     codeLang: 'Programmiersprache',
     copy: 'Kopieren',
     copied: 'Kopiert',
@@ -107,16 +104,16 @@ export const TEXT: Record<Lang, Text> = {
   en: {
     pageTitle: 'AI models by API — GenKI Lab',
     title: 'AI models by API',
-    purpose:
-      'One key for the GenKI Lab language models: for your own programs, tools like Cursor or Obsidian, and art projects. You decide per request where your data is processed.',
     statModels: 'models',
     statPlaces: 'locations',
     compat: 'OpenAI-compatible',
     signIn: 'Sign in with UdK login',
     console: 'Open the console',
     signedInAs: 'Signed in as',
+    modelsIntro:
+      'The model name in each request decides where it is processed: sovereign models run on UdK servers, EU models in data centres in the EU. One key works for every model your account may use.',
     dataNote:
-      'With sovereign models your data stays on UdK servers. EU models run in data centres in the EU; while they are experimental, do not enter personal data there.',
+      'New accounts use sovereign; the lab enables EU on request. EU models are experimental: do not send them personal data.',
     docs: 'Guide',
     help: 'Help',
     stepKey: 'Key',
@@ -143,7 +140,6 @@ export const TEXT: Record<Lang, Text> = {
       us: { name: 'US', desc: 'US providers. No personal data.' },
     },
     experimental: 'Experimental',
-    access: 'New accounts use sovereign. The lab enables EU on request.',
     codeLang: 'Programming language',
     copy: 'Copy',
     copied: 'Copied',

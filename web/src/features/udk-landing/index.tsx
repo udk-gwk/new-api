@@ -179,7 +179,6 @@ export function UdkLanding() {
 
           <div className='udk-sidebar-main'>
             <h1>{t.title}</h1>
-            <p>{t.purpose}</p>
 
             <dl className='udk-stats'>
               <div>
@@ -211,8 +210,6 @@ export function UdkLanding() {
                 <strong>{user.display_name || user.username}</strong>
               </p>
             )}
-
-            <p className='udk-note'>{t.dataNote}</p>
           </div>
 
           <div className='udk-sidebar-foot'>
@@ -269,6 +266,7 @@ export function UdkLanding() {
               </h2>
               <span className='udk-step-num'>02</span>
             </div>
+            <p className='udk-intro'>{t.modelsIntro}</p>
             <div className='udk-places'>
               {places.map((place) => (
                 <div className='udk-place' key={place}>
@@ -307,7 +305,7 @@ export function UdkLanding() {
                 </div>
               ))}
             </div>
-            <p className='udk-access'>{t.access}</p>
+            <p className='udk-note'>{t.dataNote}</p>
           </section>
 
           <section

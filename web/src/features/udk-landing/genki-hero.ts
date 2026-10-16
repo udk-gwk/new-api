@@ -140,7 +140,7 @@ type Palette = { base: RGB; accent: RGB; brush: RGB[] }
 
 /** One palette per service, every colour a shade of the service hue from the tint list in
  *  design/udk-digital-style.md. `genki` is the original multi-colour look (the default). */
-export const PALETTES: Record<'genki' | 'stt' | 'tts' | 'api', Palette> = {
+export const PALETTES: Record<'genki' | 'stt' | 'tts' | 'image' | 'api', Palette> = {
   genki: { base: [0.1, 0.1, 0.1], accent: [0, 0.4, 0.8], brush: [[1, 0, 0.5], [0, 1, 0.5], [1, 0.8, 0], [0.9, 0.9, 0.9]] },
   // stt: pale blue #ebf4ff, hue ~212°
   stt: { base: [0.03, 0.08, 0.16], accent: [0.1, 0.42, 0.82],
@@ -148,6 +148,9 @@ export const PALETTES: Record<'genki' | 'stt' | 'tts' | 'api', Palette> = {
   // tts: pale apricot #fff4eb, hue ~28°
   tts: { base: [0.2, 0.1, 0.04], accent: [0.88, 0.47, 0.14],
     brush: [[1, 0.64, 0.32], [0.98, 0.84, 0.68], [0.62, 0.29, 0.07], [0.95, 0.56, 0.2]] },
+  // image: pale violet #f6ebff, hue ~272°
+  image: { base: [0.11, 0.05, 0.18], accent: [0.56, 0.27, 0.86],
+    brush: [[0.76, 0.56, 1], [0.91, 0.84, 1], [0.36, 0.12, 0.6], [0.66, 0.4, 0.95]] },
   // api: pale yellow #fffbe0, hue ~52°
   api: { base: [0.17, 0.14, 0.03], accent: [0.86, 0.72, 0.1],
     brush: [[1, 0.9, 0.35], [1, 0.96, 0.72], [0.6, 0.48, 0.04], [0.95, 0.8, 0.18]] },

@@ -411,9 +411,15 @@
   border: 1px solid var(--udk-text-light);
   color: var(--udk-text-light);
 }
-.udk-landing .udk-access {
-  font-size: 0.75rem;
-  color: var(--udk-text-light);
+.udk-landing .udk-intro {
+  font-size: clamp(0.95rem, 0.9rem + 0.25vw, 1.1rem);
+  line-height: 1.6;
+  color: var(--udk-text-body);
+  max-width: 62ch;
+}
+.udk-landing .udk-step .udk-note {
+  margin-top: 0;
+  max-width: 62ch;
 }
 
 /* step 03 */

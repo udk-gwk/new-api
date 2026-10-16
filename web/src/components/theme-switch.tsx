@@ -31,9 +31,11 @@ import { useTheme } from '@/context/theme-provider'
 import { isThemeLocked } from '@/lib/theme-lock'
 import { cn } from '@/lib/utils'
 
-// Hidden when the build locks the theme (lib/theme-lock.ts).
+import { ThemeModeSwitch } from './theme-mode-switch'
+
+// Theme-locked builds (lib/theme-lock.ts) show the three-button mode switch.
 export function ThemeSwitch() {
-  return isThemeLocked ? null : <ThemeSwitchControl />
+  return isThemeLocked ? <ThemeModeSwitch /> : <ThemeSwitchControl />
 }
 
 function ThemeSwitchControl() {

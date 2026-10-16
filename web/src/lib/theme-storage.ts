@@ -28,12 +28,14 @@ export const THEME_STORAGE_KEYS = {
 } as const
 
 // With a build-time theme lock (lib/theme-lock.ts) these values win over
-// anything stored, and writes are dropped.
+// anything stored, and writes are dropped. The mode is not locked: it is read
+// and written as upstream does, except that system removes the key, so "no
+// choice" is stored as no value. rsbuild.config.ts reads the same key before
+// first paint.
 const LOCKED_PREFERENCES: Readonly<Record<string, string>> =
   LOCKED_PRESET === null
     ? {}
     : {
-        [THEME_STORAGE_KEYS.mode]: 'light',
         [THEME_STORAGE_KEYS.preset]: LOCKED_PRESET,
         [THEME_STORAGE_KEYS.font]: 'default',
         [THEME_STORAGE_KEYS.radius]: 'default',
@@ -61,7 +63,10 @@ export function readThemePreference<T extends string>(
 }
 
 export function writeThemePreference(key: string, value: string | null): void {
-  if (LOCKED_PRESET !== null) return
+  if (LOCKED_PRESET !== null) {
+    if (key !== THEME_STORAGE_KEYS.mode) return
+    if (value === 'system') value = null
+  }
   if (typeof window === 'undefined') return
 
   try {

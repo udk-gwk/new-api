@@ -52,6 +52,8 @@ export function loadUdkChat(): void {
     locale: localeOf(i18n.language),
     position: 'right',
     type: 'standard',
+    // The widget window follows the OS scheme; it cannot see a forced choice.
+    darkMode: 'auto',
   }
   window.addEventListener('chatwoot:ready', () => {
     window.$chatwoot?.setConversationCustomAttributes({ service: 'api' })

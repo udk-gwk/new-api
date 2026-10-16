@@ -29,6 +29,7 @@ import { Link } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ThemeModeSwitch } from '@/components/theme-mode-switch'
 import { getPricing } from '@/features/pricing/api'
 import { useAuthStore } from '@/stores/auth-store'
 
@@ -144,21 +145,24 @@ export function UdkLanding() {
             >
               GenKI Lab
             </a>
-            <div
-              className='udk-lang'
-              role='group'
-              aria-label='Sprache / Language'
-            >
-              {(['de', 'en'] as const).map((l) => (
-                <button
-                  key={l}
-                  type='button'
-                  aria-pressed={lang === l}
-                  onClick={() => void i18n.changeLanguage(l)}
-                >
-                  {l.toUpperCase()}
-                </button>
-              ))}
+            <div className='udk-switches'>
+              <div
+                className='udk-lang'
+                role='group'
+                aria-label='Sprache / Language'
+              >
+                {(['de', 'en'] as const).map((l) => (
+                  <button
+                    key={l}
+                    type='button'
+                    aria-pressed={lang === l}
+                    onClick={() => void i18n.changeLanguage(l)}
+                  >
+                    {l.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+              <ThemeModeSwitch />
             </div>
           </div>
 

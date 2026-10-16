@@ -607,6 +607,7 @@
     "Audio input cost {{quota}}": "Kosten für Audioeingabe {{quota}}",
     "App": "App",
     "App rankings shown here are simulated for preview purposes and will be replaced with live usage data once the backend integration is complete.": "Die hier angezeigten App-Ranglisten sind zu Vorschauzwecken simuliert und werden durch echte Nutzungsdaten ersetzt, sobald die Backend-Anbindung abgeschlossen ist.",
+    "Appearance": "Darstellung",
     "Append": "Anhängen",
     "Append mode: New keys will be added to the end of the existing key list": "Anhängemodus: Neue Schlüssel werden am Ende der bestehenden Schlüsselliste hinzugefügt",
     "Append Template": "Vorlage anhängen",

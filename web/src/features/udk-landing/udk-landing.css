@@ -1,8 +1,11 @@
 /* Landing page in the udk.digital style (design/udk-digital-style.md in the
  * udk-gwk infrastructure repo). Every rule is scoped under .udk-landing.
- * Sora is declared in styles/theme-udk.css. Tint: api = #fffbe0. */
+ * Sora is declared in styles/theme-udk.css. Tint: api = #fffbe0, dark
+ * #23200a. Every colour lives in the two token blocks; dark follows
+ * upstream's `.dark` class on <html>. */
 
 .udk-landing {
+  color-scheme: light;
   --udk-bg: #ffffff;
   --udk-line: #000000;
   --udk-text: #000000;
@@ -21,6 +24,18 @@
   background: var(--udk-bg);
   color: var(--udk-text);
   font-family: 'Sora', ui-sans-serif, system-ui, sans-serif;
+}
+
+.dark .udk-landing {
+  color-scheme: dark;
+  --udk-bg: #0f0f0f;
+  --udk-line: #e6e6e6;
+  --udk-text: #f2f2f2;
+  --udk-text-body: #c8c8c8;
+  --udk-text-light: #a3a3a3;
+  --udk-hover-bg: #1a1a1a;
+  --udk-tint: #23200a;
+  --udk-focus: #66b3ff;
 }
 
 .udk-landing * {
@@ -76,7 +91,7 @@
 .udk-landing .udk-sidebar-top {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   gap: 16px;
 }
 .udk-landing .udk-sidebar-main {
@@ -190,6 +205,19 @@
   min-height: 32px;
 }
 .udk-landing .udk-lang button[aria-pressed='true'] {
+  color: var(--udk-text);
+}
+/* DE EN, then 22px further right the light / dark / system switch. */
+.udk-landing .udk-switches {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.udk-landing .theme-mode-switch button {
+  color: var(--udk-text-light);
+}
+.udk-landing .theme-mode-switch button:hover,
+.udk-landing .theme-mode-switch button[aria-pressed='true'] {
   color: var(--udk-text);
 }
 

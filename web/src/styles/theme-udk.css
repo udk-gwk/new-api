@@ -1,9 +1,16 @@
 /*
  * UdK GenKI Lab preset (`data-theme-preset="udk"`), the udk.digital page style:
  * Swiss grid drawn with black hairlines, Sora, uppercase micro-labels, no
- * rounded corners, no shadows, one pale tint (api: #fffbe0) and a blue focus
- * ring. Light only. Source of the style: udk-gwk infrastructure repo,
- * design/udk-digital-style.md.
+ * rounded corners, no shadows, one pale tint (api: #fffbe0, dark #23200a) and
+ * a blue focus ring. Light and dark: the dark tokens apply under upstream's
+ * `.dark` class on <html> (ThemeProvider, or the pre-paint script that
+ * rsbuild.config.ts injects into locked builds). Source of the style: udk-gwk
+ * infrastructure repo, design/udk-digital-style.md.
+ *
+ * Every colour lives in the two token blocks below; the rules after them use
+ * var() only. The `:root[data-theme-lock='udk']` selectors let <html> carry
+ * the tokens before React has set `data-theme-preset` on <body>, so the first
+ * paint already has the right background.
  *
  * Kept in its own file so rebasing onto upstream touches theme-presets.css
  * only where the preset must opt out of the shared surface bridge.
@@ -28,8 +35,8 @@
   src: url('../assets/fonts/sora-800.woff2') format('woff2');
 }
 
-[data-theme-preset='udk'],
-.dark [data-theme-preset='udk'] {
+:root[data-theme-lock='udk'],
+[data-theme-preset='udk'] {
   color-scheme: light;
   --udk-tint: #fffbe0;
   --udk-focus: #0066cc;
@@ -94,6 +101,66 @@
   color: var(--foreground);
 }
 
+/* Dark: the same grid inverted (spec dark tokens). Primary is a light fill
+ * with a dark label. Status colours keep >= 4.5:1 on #0f0f0f (destructive
+ * 6.9, success 11.0, warning 10.8, info 8.6, neutral 7.6), and their labels
+ * are the page colour, so text on a filled badge has the same ratio. */
+:root.dark[data-theme-lock='udk'],
+.dark [data-theme-preset='udk'] {
+  color-scheme: dark;
+  --udk-tint: #23200a;
+  --udk-focus: #66b3ff;
+
+  --background: #0f0f0f;
+  --foreground: #f2f2f2;
+  --card: #0f0f0f;
+  --card-foreground: #f2f2f2;
+  --popover: #0f0f0f;
+  --popover-foreground: #f2f2f2;
+  --primary: #f2f2f2;
+  --primary-foreground: #0f0f0f;
+  --secondary: #0f0f0f;
+  --secondary-foreground: #f2f2f2;
+  --muted: #1a1a1a;
+  --muted-foreground: #a3a3a3;
+  --accent: #1a1a1a;
+  --accent-foreground: #f2f2f2;
+  --destructive: #ff6b6b;
+  --destructive-foreground: #0f0f0f;
+  --success: #4ade80;
+  --success-foreground: #0f0f0f;
+  --warning: #f5b83d;
+  --warning-foreground: #0f0f0f;
+  --info: #66b3ff;
+  --info-foreground: #0f0f0f;
+  --neutral: #a3a3a3;
+  --neutral-foreground: #0f0f0f;
+  --border: #e6e6e6;
+  --input: #e6e6e6;
+
+  --chart-1: #f2f2f2;
+  --chart-2: #a3a3a3;
+  --chart-3: #6e6e6e;
+  --chart-4: #3d3d3d;
+  --chart-5: #66b3ff;
+  --overview-accent-1: #f2f2f2;
+  --overview-accent-2: #a3a3a3;
+  --overview-accent-3: #6e6e6e;
+
+  --sidebar: #0f0f0f;
+  --sidebar-foreground: #f2f2f2;
+  --sidebar-primary: #f2f2f2;
+  --sidebar-primary-foreground: #0f0f0f;
+  --sidebar-accent-foreground: #f2f2f2;
+  --sidebar-border: #e6e6e6;
+
+  --table-header: #0f0f0f;
+  --table-header-hover: #1a1a1a;
+  --table-row: #0f0f0f;
+  --skeleton-base: #1e2630;
+  --skeleton-highlight: #1a1a1a;
+}
+
 /* No shadows anywhere; corners come from --radius (0). Avatars and the switch
  * keep their round shape, which carries meaning there. */
 [data-theme-preset='udk'] *,
@@ -133,7 +200,7 @@
   white-space: normal;
 }
 
-/* Buttons: 1px black border, hover inverts. Ghost and icon buttons (stock:
+/* Buttons: 1px line border, hover inverts. Ghost and icon buttons (stock:
  * border-transparent, no fill class) stay borderless and hover grey. */
 [data-theme-preset='udk'] [data-slot='button'] {
   border: 1px solid var(--foreground);
@@ -191,6 +258,28 @@
   border: 1px solid var(--foreground);
 }
 
+/* Dark: upstream fills fields, outline buttons, checkboxes and radios with
+ * `dark:bg-input/30`, which assumes --input is a dark grey. Here --input is
+ * the light line colour, so those fills go back to the page colour (form
+ * fields wrapped in FormControl carry `data-slot='form-control'`, which the
+ * input rule above does not see). The active tab and the unchecked switch
+ * track get the same treatment. Buttons keep their hover inversion. */
+.dark
+  [data-theme-preset='udk']
+  [class*='dark:bg-input/']:not(:disabled):not([data-slot='button']),
+.dark
+  [data-theme-preset='udk']
+  [data-slot='button'][class*='dark:bg-input/']:not(:disabled):not(:hover) {
+  background: var(--background);
+}
+.dark [data-theme-preset='udk'] [data-slot='tabs-trigger'][data-active] {
+  background: var(--background);
+}
+.dark [data-theme-preset='udk'] [data-slot='switch'][data-unchecked] {
+  background: var(--muted);
+  border-color: var(--border);
+}
+
 /* Headlines: Sora 800, tight. */
 [data-theme-preset='udk']
   :is(h1, h2, [data-slot='card-title'], [data-slot='dialog-title']) {
@@ -215,8 +304,43 @@
   outline-offset: -2px;
 }
 
-/* The lab's Chatwoot bubble: square like every udk.digital page. */
+/* The lab's Chatwoot bubble: square like every udk.digital page. Its fill is
+ * the inbox's widget colour (black), so in dark it gets a hairline to stay
+ * visible on the near-black page. */
 [data-theme-preset='udk'] :is(.woot-widget-bubble, .woot-widget-holder) {
   border-radius: 0 !important;
   box-shadow: none !important;
+}
+.dark [data-theme-preset='udk'] .woot-widget-bubble {
+  outline: 1px solid var(--border);
+}
+
+/* Light / dark / system switch (components/theme-mode-switch.tsx): three
+ * 15px line icons, the pressed one in the text colour, the others muted.
+ * Unscoped by preset so it also works under another locked preset. */
+.theme-mode-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.theme-mode-switch button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.theme-mode-switch button:hover,
+.theme-mode-switch button[aria-pressed='true'] {
+  color: var(--foreground);
+}
+.theme-mode-switch svg {
+  width: 15px;
+  height: 15px;
 }

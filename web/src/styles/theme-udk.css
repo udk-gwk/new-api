@@ -305,14 +305,15 @@
 }
 
 /* The lab's Chatwoot bubble: square like every udk.digital page. Its fill is
- * the inbox's widget colour (black), so in dark it gets a hairline to stay
- * visible on the near-black page. */
+ * the inbox's widget colour (black), so in dark it gets a 2px white frame,
+ * inside the edge, to stay visible on the near-black page. */
 [data-theme-preset='udk'] :is(.woot-widget-bubble, .woot-widget-holder) {
   border-radius: 0 !important;
   box-shadow: none !important;
 }
 .dark [data-theme-preset='udk'] .woot-widget-bubble {
-  outline: 1px solid var(--border);
+  outline: 2px solid var(--border);
+  outline-offset: -2px;
 }
 
 /* Light / dark / system switch (components/theme-mode-switch.tsx): three

@@ -102,8 +102,16 @@ if (!rootElement) {
     /* empty */
   }
 })()
-// UdK GenKI Lab builds carry the lab's chat on every page.
-if (LOCKED_PRESET === 'udk') loadUdkChat()
+// UdK GenKI Lab builds carry the lab's chat on every page, and the udk.digital
+// favicon from the first paint (applyFaviconToDom ignores its argument there).
+if (LOCKED_PRESET === 'udk') {
+  loadUdkChat()
+  applyFaviconToDom('/udk-favicon.png')
+  const touch = document.createElement('link')
+  touch.rel = 'apple-touch-icon'
+  touch.href = '/udk-apple-touch-icon.png'
+  document.head.appendChild(touch)
+}
 
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)

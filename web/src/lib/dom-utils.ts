@@ -16,7 +16,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
+import { LOCKED_PRESET } from '@/lib/theme-lock'
+
+// udk builds always show the udk.digital favicon (the UdK dot logo, as on
+// onboard.udk.digital), whatever the system logo setting says; the files come
+// from udk/infrastructure design/favicon via tools/sync-udk-favicon.ts.
+const UDK_FAVICON = '/udk-favicon.png'
+
 export function applyFaviconToDom(url: string) {
+  if (LOCKED_PRESET === 'udk') url = UDK_FAVICON
   if (typeof document === 'undefined' || !url) return
   try {
     const next = new URL(url, window.location.href).href

@@ -237,7 +237,7 @@ export function PublicHeader(props: PublicHeaderProps) {
                   )}
                 </span>
               </Link>
-              <SystemUpdateAction presentation='version' />
+              {!isThemeLocked && <SystemUpdateAction presentation='version' />}
             </div>
 
             {/* Desktop nav */}

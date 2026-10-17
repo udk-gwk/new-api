@@ -41,6 +41,7 @@ type Text = {
   how3d: string
   places: Record<Place, { name: string; desc: string }>
   experimental: string
+  currently: string
   codeLang: string
   copy: string
   copied: string
@@ -87,6 +88,7 @@ export const TEXT: Record<Lang, Text> = {
       us: { name: 'US', desc: 'US-Anbieter. Keine personenbezogenen Daten.' },
     },
     experimental: 'Experimentell',
+    currently: 'Aktuell:',
     codeLang: 'Programmiersprache',
     copy: 'Kopieren',
     copied: 'Kopiert',
@@ -131,6 +133,7 @@ export const TEXT: Record<Lang, Text> = {
       us: { name: 'US', desc: 'US providers. No personal data.' },
     },
     experimental: 'Experimental',
+    currently: 'Currently:',
     codeLang: 'Programming language',
     copy: 'Copy',
     copied: 'Copied',

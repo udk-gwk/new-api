@@ -281,7 +281,11 @@ export function UdkLanding() {
                             {m.level && (
                               <span className='udk-badge'>{m.level}</span>
                             )}
-                            {m.name && <span>{m.name}</span>}
+                            {m.name && (
+                              <span>
+                                {t.currently} {m.name}
+                              </span>
+                            )}
                             {m.experimental && (
                               <span className='udk-badge'>
                                 {t.experimental}

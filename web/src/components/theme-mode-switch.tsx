@@ -18,8 +18,8 @@ For commercial licensing, please contact support@quantumnous.com
 */
 /**
  * Theme toggle of theme-locked builds (lib/theme-lock.ts), in the udk.digital
- * style: one button that morphs between moon and sun, the new theme opening as
- * a circle from it (design/theme-toggle in udk/infrastructure, copied to
+ * style: one button whose line icon turns from moon to sun, the new theme
+ * opening as a square from it (design/theme-toggle in udk/infrastructure, copied to
  * lib/udk-theme-toggle.ts and styles/udk-theme-toggle.css). System stays the
  * default: toggling to what the system asks for stores "system" again.
  */
@@ -32,6 +32,7 @@ import { syncThemeColorMetas } from '@/lib/theme-lock'
 import {
   revealTheme,
   systemTheme,
+  themeToggleIcon,
   type ResolvedTheme,
 } from '@/lib/udk-theme-toggle'
 import { cn } from '@/lib/utils'
@@ -69,9 +70,11 @@ export function ThemeModeSwitch({ className }: { className?: string }) {
         }, e.currentTarget)
       }}
     >
-      <span>
-        <i />
-      </span>
+      {/* One icon for every udk.digital page, defined in udk-theme-toggle.ts. */}
+      <span
+        style={{ display: 'contents' }}
+        dangerouslySetInnerHTML={{ __html: themeToggleIcon }}
+      />
     </button>
   )
 }

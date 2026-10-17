@@ -1,9 +1,10 @@
 // Copy of udk/infrastructure design/theme-toggle/theme-toggle.ts, written by tools/sync-udk-theme-toggle.ts.
 // Edit the original there and re-run the sync; changes made here are overwritten.
-// udk.digital theme toggle: one button that morphs between moon and sun, after Aaron Iker's
-// "Dark / Light mode toggle" (codepen.io/aaroniker/pen/raaMMGx). The new theme opens as a
-// circle from the button (View Transitions API); browsers without it, and visitors who ask
-// for reduced motion, switch at once.
+// udk.digital theme toggle: one button whose line icon turns from moon to sun, after Aaron
+// Iker's "Dark / Light mode toggle" (codepen.io/aaroniker/pen/raaMMGx), drawn in the udk.digital
+// icon style (15px, 1.4px stroke, square caps, currentColor): a crescent moon that turns into a
+// round sun with rays. The new theme opens as a square from the button, like the grid (View
+// Transitions API); browsers without it, and visitors who ask for reduced motion, switch at once.
 //
 // Two states, light and dark. System stays the default: no choice is stored until someone
 // toggles, and toggling to the theme the system already asks for removes the choice again.
@@ -21,6 +22,15 @@ export interface ThemeOptions {
 }
 
 const COLORS: Record<ResolvedTheme, string> = { light: '#ffffff', dark: '#0f0f0f' }
+
+/** The icon, the toggle's only content. Moon for light (click for dark), sun for dark; the
+ *  morph between them is CSS on .tt-moon, .tt-sun and .tt-rays (theme-toggle.css). */
+export const themeToggleIcon =
+  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" aria-hidden="true" focusable="false">' +
+  '<path class="tt-moon" d="M13.5 9.5A5.5 5.5 0 0 1 6.5 2.5a5.5 5.5 0 1 0 7 7z"/>' +
+  '<g class="tt-sun"><circle cx="8" cy="8" r="3"/>' +
+  '<path class="tt-rays" d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M3.05 12.95l1.06-1.06M11.89 4.11l1.06-1.06"/></g>' +
+  '</svg>'
 
 /** What the system asks for, ignoring any stored choice. */
 export function systemTheme(): ResolvedTheme {
@@ -84,8 +94,10 @@ export function syncToggle(button: HTMLElement, theme: ResolvedTheme = currentTh
   if (!button.dataset.ready) requestAnimationFrame(() => (button.dataset.ready = 'true'))
 }
 
-/** Plain pages: wires a `<button class="theme-toggle" role="switch">` to the stored theme. */
+/** Plain pages: wires a `<button class="theme-toggle" role="switch">` to the stored theme and
+ *  draws its icon. */
 export function mountThemeToggle(button: HTMLElement, options: ThemeOptions): void {
+  button.innerHTML = themeToggleIcon
   syncToggle(button)
   button.addEventListener('click', () => {
     const next: ResolvedTheme = currentTheme() === 'dark' ? 'light' : 'dark'

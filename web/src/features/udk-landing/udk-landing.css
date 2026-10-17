@@ -227,7 +227,6 @@
 }
 .udk-landing .theme-toggle {
   --theme-toggle-fg: var(--udk-text);
-  --theme-toggle-bg: var(--udk-bg);
 }
 
 .udk-landing a {

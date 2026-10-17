@@ -162,10 +162,11 @@
 }
 
 /* No shadows anywhere; corners come from --radius (0). Avatars and the switch
- * keep their round shape, which carries meaning there. */
-[data-theme-preset='udk'] *,
-[data-theme-preset='udk'] *::before,
-[data-theme-preset='udk'] *::after {
+ * keep their round shape, which carries meaning there. The theme toggle's icon
+ * is drawn with shadows (moon and sun rays), so it is the one exception. */
+[data-theme-preset='udk'] *:not(.theme-toggle i),
+[data-theme-preset='udk'] *:not(.theme-toggle i)::before,
+[data-theme-preset='udk'] *:not(.theme-toggle i)::after {
   box-shadow: none !important;
 }
 [data-theme-preset='udk']
@@ -316,32 +317,13 @@
   outline-offset: -2px;
 }
 
-/* Light / dark / system switch (components/theme-mode-switch.tsx): three
- * 15px line icons, the pressed one in the text colour, the others muted.
+/* Theme toggle (components/theme-mode-switch.tsx, styles/udk-theme-toggle.css):
+ * the icon in the text colour, its crescent cut from the background behind it.
  * Unscoped by preset so it also works under another locked preset. */
-.theme-mode-switch {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-}
-.theme-mode-switch button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 32px;
-  min-height: 32px;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--muted-foreground);
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-.theme-mode-switch button:hover,
-.theme-mode-switch button[aria-pressed='true'] {
-  color: var(--foreground);
-}
-.theme-mode-switch svg {
-  width: 15px;
-  height: 15px;
+.theme-toggle {
+  --theme-toggle-fg: var(--foreground);
+  --theme-toggle-bg: var(--background);
+  --theme-toggle-focus: var(--ring);
+  width: 32px;
+  height: 32px;
 }

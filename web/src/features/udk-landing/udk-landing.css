@@ -219,18 +219,15 @@
 .udk-landing .udk-lang button[aria-pressed='true'] {
   color: var(--udk-text);
 }
-/* DE EN, then 22px further right the light / dark / system switch. */
+/* DE EN, then 22px further right the theme toggle. */
 .udk-landing .udk-switches {
   display: flex;
   align-items: center;
   gap: 22px;
 }
-.udk-landing .theme-mode-switch button {
-  color: var(--udk-text-light);
-}
-.udk-landing .theme-mode-switch button:hover,
-.udk-landing .theme-mode-switch button[aria-pressed='true'] {
-  color: var(--udk-text);
+.udk-landing .theme-toggle {
+  --theme-toggle-fg: var(--udk-text);
+  --theme-toggle-bg: var(--udk-bg);
 }
 
 .udk-landing a {

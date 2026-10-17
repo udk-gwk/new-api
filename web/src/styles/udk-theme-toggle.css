@@ -1,0 +1,85 @@
+/* Copy of udk/infrastructure design/theme-toggle/theme-toggle.css, written by tools/sync-udk-theme-toggle.ts. Edit the original and re-run the sync. */
+/* udk.digital theme toggle, after Aaron Iker's pen (codepen.io/aaroniker/pen/raaMMGx).
+   Markup: <button type="button" class="theme-toggle" role="switch" aria-checked="false"
+           aria-label="Dunkel" title="Dunkel"><span><i></i></span></button>
+   aria-checked="true" means dark: the moon has opened into the sun.
+   Colours: --theme-toggle-fg (the icon, the page's text colour) and --theme-toggle-bg (the
+   page background, which carves the crescent); --theme-toggle-focus for the focus ring.
+   Source: udk/infrastructure design/theme-toggle; synced by tools/sync-udk-theme-toggle.ts. */
+
+.theme-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--theme-toggle-fg);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+.theme-toggle:focus-visible { outline: 2px solid var(--theme-toggle-focus); outline-offset: -2px; }
+
+/* The pen's 36px icon at half size, so its geometry stays exactly the pen's. */
+.theme-toggle > span { display: block; flex: none; width: 36px; height: 36px; transform: scale(0.5); }
+.theme-toggle i {
+    display: block;
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    box-shadow: inset 16px -16px 0 0 currentColor;
+    transform: scale(1) rotate(-2deg);
+    transition: box-shadow 0.5s ease 0s, transform 0.4s ease 0.1s;
+}
+.theme-toggle i::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: transparent;
+    transition: background 0.3s ease;
+}
+.theme-toggle i::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    border-radius: 50%;
+    box-shadow: 0 -23px 0 currentColor, 0 23px 0 currentColor, 23px 0 0 currentColor, -23px 0 0 currentColor,
+        15px 15px 0 currentColor, -15px 15px 0 currentColor, 15px -15px 0 currentColor, -15px -15px 0 currentColor;
+    transform: scale(0);
+    transition: all 0.3s ease;
+}
+.theme-toggle[aria-checked='true'] i {
+    box-shadow: inset 32px -32px 0 0 var(--theme-toggle-bg);
+    transform: scale(0.5) rotate(0deg);
+    transition: transform 0.3s ease 0.1s, box-shadow 0.2s ease 0s;
+}
+.theme-toggle[aria-checked='true'] i::before { background: currentColor; transition: background 0.3s ease 0.1s; }
+.theme-toggle[aria-checked='true'] i::after { transform: scale(1.5); transition: transform 0.5s ease 0.15s; }
+/* Loading straight into dark shows the sun without the morph. */
+.theme-toggle:not([data-ready]) i,
+.theme-toggle:not([data-ready]) i::before,
+.theme-toggle:not([data-ready]) i::after { transition: none; }
+
+/* The new theme opens as a circle from the button; set by revealTheme() in theme-toggle.ts. */
+html.theme-revealing::view-transition-old(root),
+html.theme-revealing::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+html.theme-revealing::view-transition-new(root) { animation: theme-reveal 0.5s ease-in-out; }
+@keyframes theme-reveal {
+    from { clip-path: circle(0% at var(--theme-x, 50%) var(--theme-y, 50%)); }
+    to { clip-path: circle(150% at var(--theme-x, 50%) var(--theme-y, 50%)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .theme-toggle i,
+    .theme-toggle i::before,
+    .theme-toggle i::after { transition: none; }
+}

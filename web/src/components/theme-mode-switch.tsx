@@ -17,90 +17,61 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 /**
- * Light / dark / system switch of theme-locked builds (lib/theme-lock.ts), in
- * the udk.digital style: three 15px line icons as pressed-state buttons in a
- * labelled group, all three visible at once. Styles: `.theme-mode-switch` in
- * styles/theme-udk.css.
+ * Theme toggle of theme-locked builds (lib/theme-lock.ts), in the udk.digital
+ * style: one button that morphs between moon and sun, the new theme opening as
+ * a circle from it (design/theme-toggle in udk/infrastructure, copied to
+ * lib/udk-theme-toggle.ts and styles/udk-theme-toggle.css). System stays the
+ * default: toggling to what the system asks for stores "system" again.
  */
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 
 import { useTheme } from '@/context/theme-provider'
 import { syncThemeColorMetas } from '@/lib/theme-lock'
+import {
+  revealTheme,
+  systemTheme,
+  type ResolvedTheme,
+} from '@/lib/udk-theme-toggle'
 import { cn } from '@/lib/utils'
 
-const MODES = [
-  { value: 'light', label: 'Light', icon: <SunIcon /> },
-  { value: 'dark', label: 'Dark', icon: <MoonIcon /> },
-  { value: 'system', label: 'System', icon: <SystemIcon /> },
-] as const
+import '@/styles/udk-theme-toggle.css'
 
 export function ThemeModeSwitch({ className }: { className?: string }) {
   const { t } = useTranslation()
-  const { theme, setTheme } = useTheme()
-
+  const { theme, resolvedTheme, setTheme } = useTheme()
+  // The icon morphs only on a click, not when the page loads in dark.
+  const [ready, setReady] = useState(false)
+  useEffect(() => {
+    requestAnimationFrame(() => setReady(true))
+  }, [])
   useEffect(() => syncThemeColorMetas(theme), [theme])
 
   return (
-    <div
-      role='group'
-      aria-label={t('Appearance')}
-      className={cn('theme-mode-switch', className)}
+    <button
+      type='button'
+      role='switch'
+      aria-checked={resolvedTheme === 'dark'}
+      aria-label={t('Dark')}
+      title={t('Dark')}
+      data-ready={ready || undefined}
+      className={cn('theme-toggle', className)}
+      onClick={(e) => {
+        const next: ResolvedTheme = resolvedTheme === 'dark' ? 'light' : 'dark'
+        revealTheme(() => {
+          // The provider applies the class in an effect; set it here as well so
+          // the reveal captures the new theme synchronously.
+          const root = document.documentElement
+          root.classList.remove('light', 'dark')
+          root.classList.add(next)
+          flushSync(() => setTheme(next === systemTheme() ? 'system' : next))
+        }, e.currentTarget)
+      }}
     >
-      {MODES.map((mode) => (
-        <button
-          key={mode.value}
-          type='button'
-          aria-pressed={theme === mode.value}
-          aria-label={t(mode.label)}
-          title={t(mode.label)}
-          onClick={() => setTheme(mode.value)}
-        >
-          {mode.icon}
-        </button>
-      ))}
-    </div>
-  )
-}
-
-function Icon({ children }: { children: React.ReactNode }) {
-  return (
-    <svg
-      viewBox='0 0 15 15'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth='1.4'
-      strokeLinecap='square'
-      aria-hidden='true'
-      focusable='false'
-    >
-      {children}
-    </svg>
-  )
-}
-
-function SunIcon() {
-  return (
-    <Icon>
-      <circle cx='7.5' cy='7.5' r='2.6' />
-      <path d='M7.5 1v1.6M7.5 12.4V14M1 7.5h1.6M12.4 7.5H14M2.9 2.9 4 4M11 11l1.1 1.1M2.9 12.1 4 11M11 4l1.1-1.1' />
-    </Icon>
-  )
-}
-
-function MoonIcon() {
-  return (
-    <Icon>
-      <path d='M12.8 9.3A5.6 5.6 0 0 1 5.7 2.2a5.6 5.6 0 1 0 7.1 7.1Z' />
-    </Icon>
-  )
-}
-
-function SystemIcon() {
-  return (
-    <Icon>
-      <circle cx='7.5' cy='7.5' r='5.6' />
-      <path d='M7.5 1.9v11.2a5.6 5.6 0 0 1 0-11.2Z' fill='currentColor' />
-    </Icon>
+      <span>
+        <i />
+      </span>
+    </button>
   )
 }

@@ -25,8 +25,7 @@ distributor.group_access_denied: "Keine Berechtigung für den Zugriff auf diese 
 distributor.get_channel_failed: "Es konnte kein verfügbarer Kanal für das Modell {{.Model}} in der Gruppe {{.Group}} abgerufen werden (Distributor): {{.Error}}"
 distributor.no_available_channel: "Kein verfügbarer Kanal für das Modell {{.Model}} in der Gruppe {{.Group}} (Distributor)"
 distributor.no_available_channel_task_plugin: "Kein verfügbarer Kanal für das Modell {{.Model}} in der Gruppe {{.Group}}: Das Modell wird von einem Task-Plugin beansprucht, für das kein aktivierter Kanal dieses Modell bereitstellt (Distributor)"
-distributor.invalid_midjourney_request: "Ungültige Midjourney-Anfrage: {{.Error}}"
-distributor.invalid_request_parse_model: "Ungültige Anfrage, das Modell konnte nicht ermittelt werden"
+distributor.invalid_request_parse_model: "das Modell konnte nicht ermittelt werden"
 quota.user_insufficient: "Unzureichendes Benutzerkontingent, verbleibendes Kontingent: {{.Remaining}}"
 quota.pre_consume_insufficient: "Nicht genügend Kontingent, um es für diese Anfrage vorab zu reservieren: {{.Remaining}} verbleibend, {{.Required}} erforderlich"
 quota.subscription_insufficient: "Das Abonnementkontingent reicht nicht aus oder es ist kein Abonnement eingerichtet: {{.Error}}"
@@ -50,6 +49,22 @@ email.password_reset.greeting: "Hallo, Sie setzen Ihr Passwort für {{.SystemNam
 email.password_reset.link: "Klicken Sie <a href='{{.Link}}'>hier</a>, um Ihr Passwort zurückzusetzen."
 email.password_reset.link_fallback: "Falls sich der Link nicht öffnen lässt, kopieren Sie den folgenden Link in Ihren Browser:<br> {{.Link}}"
 email.password_reset.validity: "Der Link zum Zurücksetzen ist {{.Minutes}} Minuten gültig. Falls Sie ihn nicht angefordert haben, ignorieren Sie diese E-Mail bitte."
+email.binding.subject: "{{.SystemName}} — Bestätigen Sie Ihre E-Mail-Adresse"
+email.binding.new_intro: "Bestätigen Sie, dass diese E-Mail-Adresse mit Ihrem Konto verknüpft wird."
+email.binding.old_intro: "Für Ihr Konto wurde eine Änderung der E-Mail-Adresse angefordert. Bestätigen Sie, dass Ihre bisherige Adresse ersetzt wird."
+email.binding.code: "Bestätigungscode: <strong>{{.Code}}</strong>"
+email.binding.new_validity: "Dieser Code ist {{.Minutes}} Minuten gültig. Falls Sie diese Änderung nicht angefordert haben, geben Sie den Code nicht weiter."
+email.binding.old_validity: "Dieser Code ist {{.Minutes}} Minuten gültig. Falls Sie diese Änderung nicht angefordert haben, geben Sie den Code nicht weiter und wenden Sie sich an Ihre Administration."
+email.security_notice.subject: "{{.SystemName}} — Sicherheitshinweis zu Ihrem Konto"
+email.security_notice.changed: "Die Sicherheitseinstellungen Ihres Kontos wurden geändert: {{.Event}}."
+email.security_notice.advice: "Falls Sie diese Änderung nicht vorgenommen haben, öffnen Sie die Sicherheitseinstellungen Ihres Kontos, beenden Sie alle anderen Anmeldesitzungen und wenden Sie sich an Ihre Administration."
+email.security_event.password_updated: "Passwort geändert"
+email.security_event.email_change_requested: "Eine Änderung Ihrer E-Mail-Adresse wurde angefordert"
+email.security_event.email_changed: "E-Mail-Adresse geändert"
+email.security_event.email_confirmed: "E-Mail-Adresse bestätigt"
+email.security_event.login_linked: "Anmeldekonto verknüpft: {{.Provider}}"
+email.security_event.login_unlinked: "Anmeldekonto getrennt"
+email.security_event.wechat_linked: "WeChat-Konto verknüpft"
 
 # Low-quota notices
 notify.quota_low_title: "Ihr Kontingent geht zur Neige"
@@ -58,7 +73,7 @@ notify.quota_low_bark: "{{.Prompt}}, verbleibendes Kontingent: {{.Quota}}. Bitte
 notify.quota_low_gotify: "{{.Prompt}}. Ihr verbleibendes Kontingent beträgt {{.Quota}}. Bitte laden Sie bald auf."
 notify.quota_low_email: "{{.Prompt}}. Ihr verbleibendes Kontingent beträgt {{.Quota}}. Laden Sie bald auf, um den Dienst weiter nutzen zu können.<br/>Link zum Aufladen: <a href='{{.Link}}'>{{.Link}}</a>"
 
-# Channel notices sent to the root user and model update watchers
+# Channel notices sent to administrators who receive them and to model update watchers
 channel.notify_disabled_subject: "Kanal „{{.Name}}“ (#{{.Id}}) wurde deaktiviert"
 channel.notify_disabled_content: "Kanal „{{.Name}}“ (#{{.Id}}) wurde deaktiviert. Grund: {{.Reason}}"
 channel.notify_enabled_subject: "Kanal „{{.Name}}“ (#{{.Id}}) wurde aktiviert"

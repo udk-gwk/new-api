@@ -12,7 +12,7 @@ const themeLock = (process.env.PUBLIC_THEME_LOCK ?? '').trim()
 
 /**
  * `<%= themeHead %>` in index.html. Stock builds get upstream's single
- * theme-color meta. Theme-locked builds (src/lib/theme-lock.ts) get one meta
+ * theme-color meta and its pre-paint theme script. Theme-locked builds (src/lib/theme-lock.ts) get one meta
  * per colour scheme and an inline script that sets upstream's `.light`/`.dark`
  * class plus `data-theme-lock` on <html> before first paint, from the stored
  * mode (`newapi:theme:v1:mode`, src/lib/theme-storage.ts) or, with none,
@@ -20,7 +20,22 @@ const themeLock = (process.env.PUBLIC_THEME_LOCK ?? '').trim()
  * as syncThemeColorMetas() in src/lib/theme-lock.ts does later.
  */
 function themeHead(lock: string): string {
-  if (!lock) return '<meta name="theme-color" content="#fff" />'
+  if (!lock)
+    return `<meta name="theme-color" content="#fff" />
+    <script>
+      ;(function () {
+        var theme = 'system'
+        try {
+          theme = localStorage.getItem('newapi:theme:v1:mode') || 'system'
+        } catch (e) {}
+        if (theme !== 'dark' && theme !== 'light') {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light'
+        }
+        document.documentElement.classList.add(theme)
+      })()
+    </script>`
   const colors = { light: '#ffffff', dark: '#0f0f0f' }
   const metas = (['light', 'dark'] as const)
     .map(

@@ -60,7 +60,14 @@ export const CATALOG: CatalogModel[] = [
     id: 'eu-xhigh',
     place: 'eu',
     level: 'xhigh',
-    name: 'GPT-6.1 Sol Pro',
+    name: 'GLM 5.3',
+    experimental: true,
+  },
+  {
+    id: 'eu-max',
+    place: 'eu',
+    level: 'max',
+    name: 'GPT-6.1 Sol',
     experimental: true,
   },
 ]

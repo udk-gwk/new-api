@@ -7267,6 +7267,24 @@
     "Zhipu": "Zhipu",
     "Zhipu GLM": "Zhipu GLM",
     "Zhipu V4": "Zhipu V4",
-    "Zoom": "Zoom"
+    "Zoom": "Zoom",
+    "Configure a Resend API key before enabling Resend": "Hinterlege zuerst einen Resend-API-Schlüssel, bevor du Resend aktivierst",
+    "Email sending method": "Versandweg für E-Mails",
+    "Email sending method must be SMTP or Resend": "Der Versandweg muss SMTP oder Resend sein",
+    "Enter a valid sender email address": "Gib eine gültige Absenderadresse ein",
+    "Invalid Resend delivery response": "Ungültige Antwort von Resend beim Versand",
+    "Cache usage is recorded only after the upgrade; historical data is not backfilled.": "Die Cache-Nutzung wird erst ab dem Update erfasst; ältere Daten werden nicht nachgetragen.",
+    "Only the selected method sends email. The other method keeps its settings.": "Nur der gewählte Weg verschickt E-Mails. Der andere behält seine Einstellungen.",
+    "Resend API key": "Resend-API-Schlüssel",
+    "Resend API key is not configured or invalid": "Der Resend-API-Schlüssel fehlt oder ist ungültig",
+    "Resend email delivery failed (HTTP {{status}})": "Versand über Resend fehlgeschlagen (HTTP {{status}})",
+    "Resend key configuration status is read-only": "Der Status des Resend-Schlüssels ist schreibgeschützt",
+    "Resend request failed": "Anfrage an Resend fehlgeschlagen",
+    "Resend sender address is not configured or invalid": "Die Resend-Absenderadresse fehlt oder ist ungültig",
+    "Sender email address": "Absenderadresse",
+    "Sender name": "Absendername",
+    "Sender name must not contain line breaks or null characters": "Der Absendername darf keine Zeilenumbrüche oder Nullzeichen enthalten",
+    "The name recipients see. Leave blank to use the site name.": "Der Name, den Empfänger sehen. Leer lassen, um den Namen der Website zu verwenden.",
+    "The domain must be verified in Resend": "Die Domain muss in Resend verifiziert sein"
   }
 }

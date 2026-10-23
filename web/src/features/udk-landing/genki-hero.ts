@@ -115,7 +115,7 @@ void main() {
   }
   outColor = next;
 }`
-// Keep the previous-step mean: sorting fronts otherwise alternate at 30 Hz.
+// Keep the previous-step mean: sorting fronts otherwise alternate at the step rate.
 const FS_RENDER = `#version 300 es
 precision mediump float;
 precision highp int;
@@ -243,8 +243,8 @@ function reason(error: unknown): string { return error instanceof Error ? error.
 export function mountHero(canvas: HTMLCanvasElement, opts: HeroOptions = {}): HeroHandle {
   const cell = Math.max(1, positive(opts.cell, 1, 'cell'))
   const maxTexels = positive(opts.maxTexels, 1_000_000, 'maxTexels')
-  // 30, not 60: half the GPU work for a background; DaNi chose the slower pace 2026-10-16.
-  const rate = positive(opts.stepsPerSecond, 30, 'stepsPerSecond')
+  // 60 steps/s again (DaNi, 2026-10-17); 30 was tried on 2026-10-16 and read as slow motion.
+  const rate = positive(opts.stepsPerSecond, 60, 'stepsPerSecond')
   const stepMs = 1000 / rate
   const base = color(opts.colors?.base, [0.1, 0.1, 0.1], 'colors.base')
   const accent = color(opts.colors?.accent, [0, 0.4, 0.8], 'colors.accent')

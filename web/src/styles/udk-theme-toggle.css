@@ -73,12 +73,29 @@ html.theme-revealing::view-transition-new(root) {
         calc(var(--theme-y, 50vh) - var(--theme-reveal)) calc(100% - var(--theme-x, 50vw) - var(--theme-reveal))
         calc(100% - var(--theme-y, 50vh) - var(--theme-reveal)) calc(var(--theme-x, 50vw) - var(--theme-reveal))
     );
-    animation: theme-reveal 0.5s ease-in-out;
+    /* forwards: when the animation ends the square must stay full size until the transition is
+       torn down; without it the clip snaps back to nothing and the old theme flashes for a frame. */
+    animation: theme-reveal 0.5s ease-in-out forwards;
 }
 @keyframes theme-reveal {
     from { --theme-reveal: 0px; }
     to { --theme-reveal: 150vmax; }
 }
+
+/* No flash after the reveal. The new theme is photographed in the frame it is applied; a colour
+   transition on the page (buttons, links, tiles) is then still at its start in that photo and runs
+   on afterwards, so the page flashes through the old colours when the photo goes. Nothing but the
+   icon transitions while the reveal runs. */
+html.theme-revealing *:not(.theme-toggle, .theme-toggle *),
+html.theme-revealing *:not(.theme-toggle, .theme-toggle *)::before,
+html.theme-revealing *:not(.theme-toggle, .theme-toggle *)::after { transition: none !important; }
+/* The icon keeps its own morph: as a named element its new image is live, not part of the photo.
+   Its old image would double it, so that one is hidden. */
+html.theme-revealing .theme-toggle { view-transition-name: udk-theme-toggle; }
+html.theme-revealing::view-transition-group(udk-theme-toggle),
+html.theme-revealing::view-transition-old(udk-theme-toggle),
+html.theme-revealing::view-transition-new(udk-theme-toggle) { animation: none; mix-blend-mode: normal; }
+html.theme-revealing::view-transition-old(udk-theme-toggle) { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
     .theme-toggle :is(.tt-moon, .tt-sun, .tt-rays) { transition: none; }

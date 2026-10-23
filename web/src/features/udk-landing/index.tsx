@@ -30,7 +30,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ThemeModeSwitch } from '@/components/theme-mode-switch'
+import { useOAuthLogin } from '@/features/auth/hooks/use-oauth-login'
 import { getPricing } from '@/features/pricing/api'
+import { useStatus } from '@/hooks/use-status'
 import { openUdkChat } from '@/lib/udk-chat'
 import { useAuthStore } from '@/stores/auth-store'
 
@@ -88,6 +90,14 @@ export function UdkLanding() {
   const lang: Lang = i18n.language?.toLowerCase().startsWith('de') ? 'de' : 'en'
   const t = TEXT[lang]
   const user = useAuthStore((s) => s.auth.user)
+  // With password login off, /sign-in only offers the UdK login button: start it from here instead
+  // of showing that screen first. Falls back to the /sign-in link until the settings are loaded.
+  const { status } = useStatus()
+  const { handleOIDCLogin, isLoading: oidcLoading } = useOAuthLogin(status)
+  const directSignIn =
+    status?.password_login_enabled === false &&
+    Boolean(status.oidc_enabled) &&
+    Boolean(status.oidc_authorization_endpoint && status.oidc_client_id)
 
   // Signed-in visitors get the models their account can really use.
   const pricing = useQuery({
@@ -186,6 +196,16 @@ export function UdkLanding() {
                   {t.console}
                   <Arrow />
                 </Link>
+              ) : directSignIn ? (
+                <button
+                  type='button'
+                  className='udk-btn udk-btn-primary'
+                  disabled={oidcLoading}
+                  onClick={() => void handleOIDCLogin()}
+                >
+                  {t.signIn}
+                  <Arrow />
+                </button>
               ) : (
                 <Link className='udk-btn udk-btn-primary' to='/sign-in'>
                   {t.signIn}

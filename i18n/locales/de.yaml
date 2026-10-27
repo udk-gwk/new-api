@@ -31,6 +31,8 @@ quota.pre_consume_insufficient: "Nicht genügend Kontingent, um es für diese An
 quota.subscription_insufficient: "Das Abonnementkontingent reicht nicht aus oder es ist kein Abonnement eingerichtet: {{.Error}}"
 relay.model_price_not_configured: "Für das Modell {{.Model}} wurde vom Administrator noch kein Preis festgelegt. Bitte wenden Sie sich an den Administrator der Website, um dieses Modell freizuschalten."
 relay.model_price_not_configured_admin: "Für das Modell {{.Model}} ist kein Preis konfiguriert. Aktivieren Sie unter Systemeinstellungen → Betriebseinstellungen den Eigennutzungsmodus oder legen Sie den Modellpreis unter Systemeinstellungen → Gruppen- & Modellpreise fest."
+relay.task_usage_price_unsupported: "Das Modell {{.Model}} nutzt einen Aufgaben-Nutzungsausdruck; konfigurieren Sie eine normale Relay-Preisgestaltung und separate Plugin-Abrechnungsausdrücke"
+relay.shared_task_price_needs_override: "Das Modell {{.Model}} teilt seinen Abrechnungsausdruck mit dem Aufgaben-Plugin {{.Plugin}}; konfigurieren Sie einen separaten Plugin-Abrechnungsausdruck, bevor Sie die normale Relay-Preisgestaltung nutzen"
 relay.task_channel_disabled: "Der Kanal dieser Aufgabe wurde deaktiviert"
 relay.group_saturated: "Die aktuelle Gruppe ist ausgelastet. Bitte versuchen Sie es später erneut oder upgraden Sie Ihr Konto für einen besseren Service."
 relay.group_upstream_saturated: "Der Upstream der aktuellen Gruppe ist ausgelastet. Bitte versuchen Sie es später erneut"

@@ -38,6 +38,8 @@ type oidcUser struct {
 	Name              string `json:"name"`
 	PreferredUsername string `json:"preferred_username"`
 	Picture           string `json:"picture"`
+	// udk: group names, sent by authentik's default "profile" scope mapping
+	Groups []string `json:"groups"`
 }
 
 func (p *OIDCProvider) GetName() string {
@@ -154,6 +156,7 @@ func (p *OIDCProvider) GetUserInfo(ctx context.Context, token *OAuthToken) (*OAu
 		Username:       oidcUser.PreferredUsername,
 		DisplayName:    oidcUser.Name,
 		Email:          oidcUser.Email,
+		Extra:          map[string]any{"groups": oidcUser.Groups},
 	}, nil
 }
 

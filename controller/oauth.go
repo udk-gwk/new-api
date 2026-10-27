@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"os"
 	"slices"
 	"strconv"
 	"strings"
@@ -15,6 +16,8 @@ import (
 	"github.com/QuantumNous/new-api/model"
 	"github.com/QuantumNous/new-api/oauth"
 	"github.com/QuantumNous/new-api/service"
+	"github.com/QuantumNous/new-api/setting/ratio_setting"
+	"github.com/QuantumNous/new-api/setting/system_setting"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -510,6 +513,14 @@ func findOrCreateOAuthUser(c *gin.Context, provider oauth.Provider, oauthUser *o
 	}
 	user.Role = common.RoleCommonUser
 	user.Status = common.UserStatusEnabled
+	// udk: new OIDC users start in the group mapped from their authentik
+	// groups; only at signup, so existing users and their keys never move.
+	if _, ok := provider.(*oauth.OIDCProvider); ok {
+		claims, _ := oauthUser.Extra["groups"].([]string)
+		if group := system_setting.OIDCGroupForClaims(os.Getenv("OIDC_GROUP_MAPPING"), claims); group != "" && ratio_setting.ContainsGroupRatio(group) {
+			user.Group = group
+		}
+	}
 
 	// Handle affiliate code
 	inviterId := 0

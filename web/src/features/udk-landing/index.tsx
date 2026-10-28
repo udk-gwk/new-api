@@ -172,16 +172,18 @@ export function UdkLanding() {
                 role='group'
                 aria-label='Sprache / Language'
               >
-                {(['de', 'en'] as const).map((l) => (
-                  <button
-                    key={l}
-                    type='button'
-                    aria-pressed={lang === l}
-                    onClick={() => void i18n.changeLanguage(l)}
-                  >
-                    {l.toUpperCase()}
-                  </button>
-                ))}
+                {(['de', 'en'] as const)
+                  .filter((l) => l !== lang)
+                  .map((l) => (
+                    <button
+                      key={l}
+                      type='button'
+                      lang={l}
+                      onClick={() => void i18n.changeLanguage(l)}
+                    >
+                      {l.toUpperCase()}
+                    </button>
+                  ))}
               </div>
               <ThemeModeSwitch />
             </div>
@@ -223,11 +225,11 @@ export function UdkLanding() {
 
           <div className='udk-sidebar-foot'>
             <div className='udk-foot-links'>
-              <a href='https://onboard.udk.digital/doc/apiudkdigital-UffkkddWGn'>
+              <a href='https://help.udk.digital/doc/apiudkdigital-UffkkddWGn'>
                 {t.docs}
               </a>
               <a
-                href='https://onboard.udk.digital'
+                href='https://help.udk.digital'
                 onClick={(e) => {
                   e.preventDefault()
                   openUdkChat()

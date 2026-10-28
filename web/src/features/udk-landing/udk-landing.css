@@ -216,10 +216,11 @@
   min-width: 32px;
   min-height: 32px;
 }
-.udk-landing .udk-lang button[aria-pressed='true'] {
+.udk-landing .udk-lang button:hover,
+.udk-landing .udk-lang button:focus-visible {
   color: var(--udk-text);
 }
-/* DE EN, then 22px further right the theme toggle. */
+/* The other language (only that one), then 22px further right the theme toggle. */
 .udk-landing .udk-switches {
   display: flex;
   align-items: center;

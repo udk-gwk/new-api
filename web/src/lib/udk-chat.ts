@@ -33,7 +33,7 @@ import { useAuthStore } from '@/stores/auth-store'
 
 const BASE_URL = 'https://chat.udk.digital'
 const WEBSITE_TOKEN = 'PZVaDZC6WmZ8VNvvDnkriCCV'
-const HELP_URL = 'https://onboard.udk.digital'
+const HELP_URL = 'https://help.udk.digital'
 
 type Chatwoot = {
   toggle: (state?: 'open' | 'close') => void

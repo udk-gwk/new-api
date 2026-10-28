@@ -19,7 +19,7 @@ For commercial licensing, please contact support@quantumnous.com
 import { LOCKED_PRESET } from '@/lib/theme-lock'
 
 // udk builds always show the udk.digital favicon (the UdK dot logo, as on
-// onboard.udk.digital), whatever the system logo setting says; the files come
+// help.udk.digital), whatever the system logo setting says; the files come
 // from udk/infrastructure design/favicon via tools/sync-udk-favicon.ts.
 const UDK_FAVICON = '/udk-favicon.png'
 

@@ -1015,3 +1015,90 @@ func verifyAPITokenAudit(t *testing.T) {
 		assert.EqualValues(t, 1, count)
 	})
 }
+
+// udk: agentopia key provisioning (POST/DELETE /api/udk/agent-key)
+func TestUdkAgentKeyProvisioning(t *testing.T) {
+	db := setupTokenControllerTestDB(t)
+	require.NoError(t, db.AutoMigrate(&model.User{}))
+	t.Setenv("OIDC_GROUP_MAPPING", `[{"claim":"GenKI Team","group":"vip"}]`)
+	require.True(t, common.RegisterEnabled)
+
+	type agentKey struct {
+		UserID       int    `json:"user_id"`
+		Username     string `json:"username"`
+		Group        string `json:"group"`
+		TokenID      int    `json:"token_id"`
+		Key          string `json:"key"`
+		UserCreated  bool   `json:"user_created"`
+		TokenCreated bool   `json:"token_created"`
+	}
+	provision := func(body map[string]any) (*httptest.ResponseRecorder, agentKey) {
+		ctx, rec := newAuthenticatedContext(t, http.MethodPost, "/api/udk/agent-key", body, 1)
+		UdkProvisionAgentKey(ctx)
+		var data agentKey
+		if resp := decodeAPIResponse(t, rec); resp.Success {
+			require.NoError(t, common.Unmarshal(resp.Data, &data))
+		}
+		return rec, data
+	}
+	body := map[string]any{
+		"oidc_id": "hashed-sub-1", "username": "dani", "email": "Dani@Example.org",
+		"groups": []string{"GenKI Team"}, "name": "agentopia", "models": []string{"sovereign-medium"}, "remain_quota": 5000,
+	}
+
+	// a person who never used the console gets a user (signup group mapped) and a key
+	_, first := provision(body)
+	require.NotZero(t, first.TokenID)
+	assert.True(t, first.UserCreated)
+	assert.True(t, first.TokenCreated)
+	assert.Equal(t, "dani", first.Username)
+	assert.Equal(t, "vip", first.Group)
+	assert.True(t, strings.HasPrefix(first.Key, "sk-"))
+	var token model.Token
+	require.NoError(t, db.First(&token, first.TokenID).Error)
+	assert.True(t, token.ModelLimitsEnabled)
+	assert.Equal(t, "sovereign-medium", token.ModelLimits)
+	assert.Equal(t, 5000, token.RemainQuota)
+	assert.False(t, token.UnlimitedQuota)
+	var user model.User
+	require.NoError(t, db.First(&user, first.UserID).Error)
+	assert.Equal(t, "hashed-sub-1", user.OidcId)
+	assert.Equal(t, "dani@example.org", user.Email)
+
+	// repeated provisioning is idempotent: same user, same key
+	_, again := provision(body)
+	assert.Equal(t, first.Key, again.Key)
+	assert.Equal(t, first.UserID, again.UserID)
+	assert.False(t, again.UserCreated)
+	assert.False(t, again.TokenCreated)
+
+	// invalid requests mint nothing
+	for _, bad := range []map[string]any{
+		{"oidc_id": "", "name": "agentopia", "models": []string{"sovereign-medium"}},
+		{"oidc_id": "x", "name": "", "models": []string{"sovereign-medium"}},
+		{"oidc_id": "x", "name": "agentopia"},
+		{"oidc_id": "x", "name": "agentopia", "models": []string{"m"}, "remain_quota": -1},
+	} {
+		rec, _ := provision(bad)
+		assert.False(t, decodeAPIResponse(t, rec).Success)
+	}
+	var users int64
+	require.NoError(t, db.Model(&model.User{}).Count(&users).Error)
+	assert.EqualValues(t, 1, users)
+
+	// a disabled user gets no key
+	require.NoError(t, db.Model(&model.User{}).Where("id = ?", first.UserID).Update("status", common.UserStatusDisabled).Error)
+	rec, _ := provision(body)
+	assert.Equal(t, http.StatusForbidden, rec.Code)
+	assert.NotContains(t, rec.Body.String(), first.Key)
+	require.NoError(t, db.Model(&model.User{}).Where("id = ?", first.UserID).Update("status", common.UserStatusEnabled).Error)
+
+	// revoke deletes the key; the next provisioning mints a new one
+	ctx, revokeRec := newAuthenticatedContext(t, http.MethodDelete, "/api/udk/agent-key", map[string]any{"oidc_id": "hashed-sub-1", "name": "agentopia"}, 1)
+	UdkRevokeAgentKey(ctx)
+	assert.True(t, decodeAPIResponse(t, revokeRec).Success)
+	_, fresh := provision(body)
+	assert.True(t, fresh.TokenCreated)
+	assert.NotEqual(t, first.Key, fresh.Key)
+	assert.Equal(t, first.UserID, fresh.UserID)
+}

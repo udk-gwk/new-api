@@ -280,6 +280,14 @@ func SetApiRouter(router *gin.Engine) {
 		handlePermissionRoute(apiRouter.Group("", middleware.AdminAuth()), http.MethodGet, "/task_plugin_options", authz.TaskPluginBind, controller.GetTaskPluginOptions)
 		registerChannelRoutes(apiRouter)
 		registerAuthzRoutes(apiRouter)
+		// udk: agentopia provisions one key per person (root only, server to server)
+		udkRoute := apiRouter.Group("/udk")
+		udkRoute.Use(middleware.RootAuth())
+		{
+			udkRoute.POST("/agent-key", middleware.CriticalRateLimit(), middleware.DisableCache(), controller.UdkProvisionAgentKey)
+			udkRoute.DELETE("/agent-key", controller.UdkRevokeAgentKey)
+		}
+
 		tokenRoute := apiRouter.Group("/token")
 		tokenRoute.Use(middleware.UserAuth())
 		tokenRoute.Use(middleware.TokenOperationAudit())

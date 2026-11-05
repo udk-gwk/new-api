@@ -183,3 +183,77 @@ func UdkRevokeAgentKey(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "", "data": gin.H{"deleted": deleted}})
 }
+
+type udkAgentKeyUsageRequest struct {
+	OidcIds []string `json:"oidc_ids"`
+	Name    string   `json:"name"`
+}
+
+type udkAgentKeyUsage struct {
+	UsedQuota      int   `json:"used_quota"`
+	RemainQuota    int   `json:"remain_quota"`
+	UnlimitedQuota bool  `json:"unlimited_quota"`
+	AccessedTime   int64 `json:"accessed_time"`
+	UserQuota      int   `json:"user_quota"`
+	UserUsedQuota  int   `json:"user_used_quota"`
+}
+
+// UdkAgentKeyUsage reports, for up to 500 people, what their key named name has used
+// and has left, plus the person's account balance. Read only, no key material: agentopia's
+// admin area shows it next to each person. People without a user or a key are left out.
+func UdkAgentKeyUsage(c *gin.Context) {
+	var req udkAgentKeyUsageRequest
+	if err := common.DecodeJson(c.Request.Body, &req); err != nil {
+		common.ApiErrorT(c, "Invalid parameters")
+		return
+	}
+	req.Name = strings.TrimSpace(req.Name)
+	ids := make([]string, 0, len(req.OidcIds))
+	for _, id := range req.OidcIds {
+		if id = strings.TrimSpace(id); id != "" {
+			ids = append(ids, id)
+		}
+	}
+	if req.Name == "" || len(ids) > 500 {
+		common.ApiErrorT(c, "Invalid parameters")
+		return
+	}
+	usage := make(map[string]udkAgentKeyUsage, len(ids))
+	if len(ids) > 0 {
+		var users []model.User
+		if err := model.DB.Select("id", "oidc_id", "quota", "used_quota").Where("oidc_id IN ?", ids).Find(&users).Error; err != nil {
+			common.ApiError(c, err)
+			return
+		}
+		byUser := make(map[int]model.User, len(users))
+		userIds := make([]int, 0, len(users))
+		for _, u := range users {
+			byUser[u.Id] = u
+			userIds = append(userIds, u.Id)
+		}
+		if len(userIds) > 0 {
+			var tokens []model.Token
+			if err := model.DB.Select("user_id", "used_quota", "remain_quota", "unlimited_quota", "accessed_time").
+				Where("user_id IN ? AND name = ?", userIds, req.Name).Find(&tokens).Error; err != nil {
+				common.ApiError(c, err)
+				return
+			}
+			for _, t := range tokens {
+				u := byUser[t.UserId]
+				usage[u.OidcId] = udkAgentKeyUsage{
+					UsedQuota:      t.UsedQuota,
+					RemainQuota:    t.RemainQuota,
+					UnlimitedQuota: t.UnlimitedQuota,
+					AccessedTime:   t.AccessedTime,
+					UserQuota:      u.Quota,
+					UserUsedQuota:  u.UsedQuota,
+				}
+			}
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "",
+		"data":    gin.H{"quota_per_unit": common.QuotaPerUnit, "usage": usage},
+	})
+}

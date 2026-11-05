@@ -286,6 +286,7 @@ func SetApiRouter(router *gin.Engine) {
 		{
 			udkRoute.POST("/agent-key", middleware.CriticalRateLimit(), middleware.DisableCache(), controller.UdkProvisionAgentKey)
 			udkRoute.DELETE("/agent-key", controller.UdkRevokeAgentKey)
+			udkRoute.POST("/agent-key/usage", middleware.DisableCache(), controller.UdkAgentKeyUsage)
 		}
 
 		tokenRoute := apiRouter.Group("/token")

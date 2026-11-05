@@ -1102,3 +1102,47 @@ func TestUdkAgentKeyProvisioning(t *testing.T) {
 	assert.NotEqual(t, first.Key, fresh.Key)
 	assert.Equal(t, first.UserID, fresh.UserID)
 }
+
+// udk: agentopia admin area reads spend per person (POST /api/udk/agent-key/usage)
+func TestUdkAgentKeyUsage(t *testing.T) {
+	db := setupTokenControllerTestDB(t)
+	require.NoError(t, db.AutoMigrate(&model.User{}))
+
+	ctx, rec := newAuthenticatedContext(t, http.MethodPost, "/api/udk/agent-key", map[string]any{
+		"oidc_id": "sub-a", "username": "ana", "name": "agentopia", "models": []string{"sovereign-medium"}, "remain_quota": 5000,
+	}, 1)
+	UdkProvisionAgentKey(ctx)
+	resp := decodeAPIResponse(t, rec)
+	require.True(t, resp.Success)
+	var created struct {
+		TokenID int    `json:"token_id"`
+		Key     string `json:"key"`
+	}
+	require.NoError(t, common.Unmarshal(resp.Data, &created))
+	require.NoError(t, db.Model(&model.Token{}).Where("id = ?", created.TokenID).Updates(map[string]any{"used_quota": 1234, "remain_quota": 3766}).Error)
+
+	ctx, rec = newAuthenticatedContext(t, http.MethodPost, "/api/udk/agent-key/usage", map[string]any{
+		"oidc_ids": []string{"sub-a", "sub-unknown"}, "name": "agentopia",
+	}, 1)
+	UdkAgentKeyUsage(ctx)
+	resp = decodeAPIResponse(t, rec)
+	require.True(t, resp.Success)
+	var data struct {
+		QuotaPerUnit float64                     `json:"quota_per_unit"`
+		Usage        map[string]udkAgentKeyUsage `json:"usage"`
+	}
+	require.NoError(t, common.Unmarshal(resp.Data, &data))
+	assert.Equal(t, common.QuotaPerUnit, data.QuotaPerUnit)
+	require.Contains(t, data.Usage, "sub-a")
+	assert.NotContains(t, data.Usage, "sub-unknown")
+	assert.Equal(t, 1234, data.Usage["sub-a"].UsedQuota)
+	assert.Equal(t, 3766, data.Usage["sub-a"].RemainQuota)
+	// never any key material
+	assert.NotContains(t, rec.Body.String(), strings.TrimPrefix(created.Key, "sk-"))
+	assert.NotContains(t, rec.Body.String(), `"key"`)
+
+	// a missing name is refused
+	ctx, rec = newAuthenticatedContext(t, http.MethodPost, "/api/udk/agent-key/usage", map[string]any{"oidc_ids": []string{"sub-a"}}, 1)
+	UdkAgentKeyUsage(ctx)
+	assert.False(t, decodeAPIResponse(t, rec).Success)
+}

@@ -214,6 +214,9 @@ var accessTokenRouteRules = map[string]accessTokenRouteRule{
 	// router/api-router.go: /api/udk (agentopia key provisioning, root only)
 	"POST /api/udk/agent-key":   accessTokenScopeRule("api_key:write"),
 	"DELETE /api/udk/agent-key": accessTokenScopeRule("api_key:write"),
+	// read-only, but the same scope: agentopia holds one PAT for all three routes and
+	// write does not imply read
+	"POST /api/udk/agent-key/usage": accessTokenScopeRule("api_key:write"),
 
 	// router/api-router.go: /api/token
 	"GET /api/token/":            accessTokenScopeRule("api_key:read"),

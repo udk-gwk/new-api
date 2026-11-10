@@ -11,11 +11,13 @@ import (
 	"errors"
 	"net/http"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 
 	"github.com/QuantumNous/new-api/common"
 	"github.com/QuantumNous/new-api/model"
+	"github.com/QuantumNous/new-api/service"
 	"github.com/QuantumNous/new-api/setting/ratio_setting"
 	"github.com/QuantumNous/new-api/setting/system_setting"
 
@@ -32,6 +34,52 @@ type udkAgentKeyRequest struct {
 	Name        string   `json:"name"`
 	Models      []string `json:"models"`
 	RemainQuota int      `json:"remain_quota"`
+	// AllModels mints the key without a model list: it may use every model of its group.
+	AllModels bool `json:"all_models"`
+	// Refresh re-applies group and model rule to an existing key (agentopia's "reload models").
+	Refresh bool `json:"refresh"`
+}
+
+// udkBestGroup is the group a new agent key runs in: of the groups this user may pick
+// for a key, the one with the most enabled models (the user's own group on a tie).
+// "" means the user's own group, so the key follows a later move to another group.
+func udkBestGroup(userGroup string) string {
+	best, bestN := "", udkGroupModelCount(userGroup)
+	groups := make([]string, 0)
+	for g := range service.GetUserUsableGroups(userGroup) {
+		if g != userGroup && service.IsUserSelectableGroup(userGroup, g) {
+			groups = append(groups, g)
+		}
+	}
+	sort.Strings(groups)
+	for _, g := range groups {
+		if n := udkGroupModelCount(g); n > bestN {
+			best, bestN = g, n
+		}
+	}
+	return best
+}
+
+// udkGroupModelCount counts the distinct enabled models of a group (struct condition, so
+// gorm quotes the reserved column name "group" for every database).
+func udkGroupModelCount(group string) int64 {
+	var n int64
+	if group == "" {
+		return 0
+	}
+	model.DB.Model(&model.Ability{}).Where(&model.Ability{Group: group, Enabled: true}).Distinct("model").Count(&n)
+	return n
+}
+
+// udkApplyModelRule sets the key's group and model list from the request.
+func udkApplyModelRule(token *model.Token, userGroup string, req udkAgentKeyRequest) {
+	token.Group = udkBestGroup(userGroup)
+	token.ModelLimitsEnabled = !req.AllModels
+	if req.AllModels {
+		token.ModelLimits = ""
+	} else {
+		token.ModelLimits = strings.Join(req.Models, ",")
+	}
 }
 
 // UdkProvisionAgentKey returns the person's key named req.Name, creating the user
@@ -44,7 +92,7 @@ func UdkProvisionAgentKey(c *gin.Context) {
 	}
 	req.OidcId = strings.TrimSpace(req.OidcId)
 	req.Name = strings.TrimSpace(req.Name)
-	if req.OidcId == "" || req.Name == "" || len(req.Name) > 50 || len(req.Models) == 0 {
+	if req.OidcId == "" || req.Name == "" || len(req.Name) > 50 || (len(req.Models) == 0 && !req.AllModels) {
 		common.ApiErrorT(c, "Invalid parameters")
 		return
 	}
@@ -111,7 +159,7 @@ func UdkProvisionAgentKey(c *gin.Context) {
 		common.ApiError(c, err)
 		return
 	}
-	tokenCreated := false
+	tokenCreated, tokenUpdated := false, false
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		key, err := common.GenerateKey()
 		if err != nil {
@@ -127,15 +175,21 @@ func UdkProvisionAgentKey(c *gin.Context) {
 			AccessedTime:        now,
 			ExpiredTime:         -1,
 			RemainQuota:         req.RemainQuota,
-			ModelLimitsEnabled:  true,
-			ModelLimits:         strings.Join(req.Models, ","),
 			AllowUserQuotaQuery: true,
 		}
+		udkApplyModelRule(&token, user.Group, req)
 		if err := token.Insert(); err != nil {
 			common.ApiError(c, err)
 			return
 		}
 		tokenCreated = true
+	} else if req.Refresh {
+		udkApplyModelRule(&token, user.Group, req)
+		if err := token.Update(); err != nil {
+			common.ApiError(c, err)
+			return
+		}
+		tokenUpdated = true
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -149,6 +203,9 @@ func UdkProvisionAgentKey(c *gin.Context) {
 			"key":           "sk-" + token.Key,
 			"user_created":  userCreated,
 			"token_created": tokenCreated,
+			"token_updated": tokenUpdated,
+			"token_group":   token.Group,
+			"all_models":    !token.ModelLimitsEnabled,
 		},
 	})
 }

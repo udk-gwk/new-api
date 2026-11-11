@@ -9,6 +9,14 @@ type OpenAIModels struct {
 	Created                int                  `json:"created"`
 	OwnedBy                string               `json:"owned_by"`
 	SupportedEndpointTypes []types.EndpointType `json:"supported_endpoint_types"`
+	// OpenRouter's capability fields, from the model metadata's tags; absent when unknown
+	Architecture        *ModelArchitecture `json:"architecture,omitempty"`
+	SupportedParameters []string           `json:"supported_parameters,omitempty"`
+}
+
+type ModelArchitecture struct {
+	InputModalities  []string `json:"input_modalities"`
+	OutputModalities []string `json:"output_modalities"`
 }
 
 type AnthropicModel struct {

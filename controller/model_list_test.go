@@ -529,3 +529,73 @@ func TestSetupLoginDoesNotTouchPasswordWhenPasswordFieldOmitted(t *testing.T) {
 	require.NoError(t, db.First(&stored, user.Id).Error)
 	assert.Equal(t, hashedPassword, stored.Password)
 }
+
+func TestListModelsReportsCapabilitiesFromMetadataTags(t *testing.T) {
+	withSelfUseModeEnabled(t)
+	db := setupModelListControllerTestDB(t)
+
+	originalMemoryCacheEnabled := common.MemoryCacheEnabled
+	common.MemoryCacheEnabled = true
+	t.Cleanup(func() {
+		common.MemoryCacheEnabled = originalMemoryCacheEnabled
+		model.InvalidatePricingCache()
+	})
+
+	require.NoError(t, db.Create(&model.User{
+		Id:       1004,
+		Username: "capabilities-model-list-user",
+		Password: "password",
+		Group:    "default",
+		Status:   common.UserStatusEnabled,
+	}).Error)
+	require.NoError(t, db.Create(&model.Channel{
+		Id:     702,
+		Type:   constant.ChannelTypeOpenAI,
+		Key:    "capabilities-key",
+		Status: common.ChannelStatusEnabled,
+		Name:   "capabilities-channel",
+		Group:  "default",
+		Models: "zz-vision-model,zz-text-model,zz-bare-model",
+	}).Error)
+	require.NoError(t, db.Create(&[]model.Ability{
+		{Group: "default", Model: "zz-vision-model", ChannelId: 702, Enabled: true},
+		{Group: "default", Model: "zz-text-model", ChannelId: 702, Enabled: true},
+		{Group: "default", Model: "zz-bare-model", ChannelId: 702, Enabled: true},
+	}).Error)
+	require.NoError(t, db.Create(&[]model.Model{
+		{ModelName: "zz-vision-model", Tags: "sovereign,medium,vision,reasoning", Status: 1},
+		{ModelName: "zz-text-model", Tags: "eu,high", Status: 1},
+	}).Error)
+
+	model.InitChannelCache()
+	model.InvalidatePricingCache()
+	model.GetPricing()
+
+	recorder := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(recorder)
+	ctx.Request = httptest.NewRequest(http.MethodGet, "/v1/models", nil)
+	ctx.Set("id", 1004)
+
+	ListModels(ctx, constant.ChannelTypeOpenAI)
+
+	byID := map[string]dto.OpenAIModels{}
+	for _, m := range decodeListModelsPayload(t, recorder).Data {
+		byID[m.Id] = m
+	}
+	require.Len(t, byID, 3)
+
+	vision := byID["zz-vision-model"]
+	require.NotNil(t, vision.Architecture)
+	require.Equal(t, []string{"text", "image"}, vision.Architecture.InputModalities)
+	require.Equal(t, []string{"text"}, vision.Architecture.OutputModalities)
+	require.Equal(t, []string{"reasoning"}, vision.SupportedParameters)
+
+	text := byID["zz-text-model"]
+	require.NotNil(t, text.Architecture)
+	require.Equal(t, []string{"text"}, text.Architecture.InputModalities)
+	require.Empty(t, text.SupportedParameters)
+
+	// no metadata: capabilities unknown, the fields are left out
+	require.Nil(t, byID["zz-bare-model"].Architecture)
+	require.Contains(t, recorder.Body.String(), `"input_modalities":["text","image"]`)
+}

@@ -204,6 +204,12 @@ func updatePricing() {
 		names = append(names, ability.Model)
 	}
 	metaMap := resolveModelMetadata(allMeta, names)
+	// the models with real metadata rows, before initDefaultVendorMapping adds stand-ins:
+	// only these have tags that can state capabilities
+	withMetadata := make(map[string]*Model, len(metaMap))
+	for name, meta := range metaMap {
+		withMetadata[name] = meta
+	}
 
 	// 预加载供应商
 	var vendors []Vendor
@@ -283,6 +289,7 @@ func updatePricing() {
 		}
 		modelSupportEndpointTypes[model] = supportedEndpoints
 	}
+	buildModelCapabilities(withMetadata)
 
 	// 构建全局 supportedEndpointMap（默认 + 自定义覆盖）
 	supportedEndpointMap = make(map[string]common.EndpointInfo)

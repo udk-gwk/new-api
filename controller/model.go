@@ -176,6 +176,13 @@ func buildOpenAIModel(modelName string, ownerByModel map[string]string) dto.Open
 		oaiModel.OwnedBy = owner
 	}
 	oaiModel.SupportedEndpointTypes = model.GetModelSupportEndpointTypes(modelName)
+	if caps, ok := model.GetModelCapabilities(modelName); ok {
+		oaiModel.Architecture = &dto.ModelArchitecture{
+			InputModalities:  caps.InputModalities,
+			OutputModalities: caps.OutputModalities,
+		}
+		oaiModel.SupportedParameters = caps.SupportedParameters
+	}
 	return oaiModel
 }
 

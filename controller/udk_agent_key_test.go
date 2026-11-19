@@ -82,12 +82,23 @@ func TestUdkAgentKeyBestGroup(t *testing.T) {
 	assert.False(t, token.ModelLimitsEnabled)
 	assert.Equal(t, "", token.ModelLimits)
 	assert.Equal(t, 5000, token.RemainQuota)
+	assert.False(t, token.UnlimitedQuota)
+
+	// unlimited_quota lifts the key's own cap on refresh
+	body["unlimited_quota"] = true
+	provision(body)
+	require.NoError(t, db.Where("name = ?", "agentopia").First(&token).Error)
+	assert.True(t, token.UnlimitedQuota)
 
 	// a new key is minted in the best group straight away
 	fresh := provision(map[string]any{
 		"oidc_id": "sub-new", "groups": []string{"GenKI Team"}, "name": "agentopia", "all_models": true,
+		"unlimited_quota": true,
 	})
 	assert.Equal(t, true, fresh["token_created"])
 	assert.Equal(t, "eu", fresh["token_group"])
 	assert.Equal(t, true, fresh["all_models"])
+	var minted model.Token
+	require.NoError(t, db.Where("id = ?", int(fresh["token_id"].(float64))).First(&minted).Error)
+	assert.True(t, minted.UnlimitedQuota)
 }

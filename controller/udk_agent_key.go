@@ -34,6 +34,10 @@ type udkAgentKeyRequest struct {
 	Name        string   `json:"name"`
 	Models      []string `json:"models"`
 	RemainQuota int      `json:"remain_quota"`
+	// UnlimitedQuota mints the key without its own spending cap (create and refresh), so
+	// the person's account balance is the only limit (DaNi 2026-11-19: a &10 key cap stopped
+	// k.tillmann's agent although the account had been topped up).
+	UnlimitedQuota bool `json:"unlimited_quota"`
 	// AllModels mints the key without a model list: it may use every model of its group.
 	AllModels bool `json:"all_models"`
 	// Refresh re-applies group and model rule to an existing key (agentopia's "reload models").
@@ -79,6 +83,9 @@ func udkApplyModelRule(token *model.Token, userGroup string, req udkAgentKeyRequ
 		token.ModelLimits = ""
 	} else {
 		token.ModelLimits = strings.Join(req.Models, ",")
+	}
+	if req.UnlimitedQuota {
+		token.UnlimitedQuota = true
 	}
 }
 

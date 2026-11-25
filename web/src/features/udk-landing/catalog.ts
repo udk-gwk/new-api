@@ -46,7 +46,7 @@ export const CATALOG: CatalogModel[] = [
     id: 'eu-medium',
     place: 'eu',
     level: 'medium',
-    name: 'DeepSeek V4 Flash',
+    name: 'Claude Haiku 5.5',
     experimental: true,
   },
   {
@@ -60,7 +60,7 @@ export const CATALOG: CatalogModel[] = [
     id: 'eu-xhigh',
     place: 'eu',
     level: 'xhigh',
-    name: 'GLM 5.3',
+    name: 'GPT-6.1 Terra',
     experimental: true,
   },
   {
